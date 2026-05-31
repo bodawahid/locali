@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
 import { useSEO } from '../lib/seo';
 import { Link } from 'react-router-dom';
-import { Radio, TrendingUp, CloudSun, Car, ShieldCheck, Calendar, DollarSign, AlertTriangle, CheckCircle2, ArrowRight, RefreshCw } from 'lucide-react';
+import { Radio, TrendingUp, CloudSun, Car, ShieldCheck, Calendar, DollarSign, AlertTriangle, CheckCircle2, ArrowRight } from 'lucide-react';
 
 const CITY_LABELS = {
   hurghada: 'Hurghada',
@@ -95,7 +94,26 @@ export default function LiveSituationPage() {
 
   const { data: allRecords = [], isLoading } = useQuery({
     queryKey: ['live-situation'],
-    queryFn: () => base44.entities.LiveSituation.list('-update_date', 20),
+    queryFn: async () => {
+      try {
+        const params = new URLSearchParams({
+          entity: 'live_situation',
+          page: '1',
+          limit: '20',
+        });
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}?${params.toString()}`;
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Failed to load live situation data');
+        const rows = await response.json();
+        const safeRows = Array.isArray(rows) ? rows : [];
+        return safeRows.sort((a, b) =>
+          String(b?.update_date || '').localeCompare(String(a?.update_date || ''))
+        );
+      } catch (error) {
+        console.error('Error loading live situation:', error);
+        return [];
+      }
+    },
   });
 
   // Get latest record per city

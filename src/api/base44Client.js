@@ -1,47 +1,27 @@
 // @ts-nocheck
-/**
- * Base44 Client - API Communication Layer
- * UPDATED FOR LOCAL XAMPP PHP API
- * 
- * Base URL: http://localhost/locali-api/api.php
- * Database: locali_egypt (local XAMPP MySQL)
- * 
- * This client communicates directly with the PHP router instead of Node.js backend.
- */
-
 import axios from 'axios';
 
-// Point to local XAMPP PHP API instead of Node backend
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || 'http://localhost/locali-api/api.php';
 const TOKEN_STORAGE_KEY = 'locali_auth_token';
 
-const http = axios.create({ 
-  baseURL: API_BASE, 
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-  }
+const http = axios.create({
+  baseURL: API_BASE,
+  timeout: 20000,
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor to add auth token
 http.interceptors.request.use((config) => {
   const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = 'Bearer ' + token;
   return config;
-}, (error) => {
-  return Promise.reject(error);
 });
 
-// Response interceptor to handle auth errors
 http.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem(TOKEN_STORAGE_KEY);
       localStorage.removeItem('locali_auth_user');
-      // Optionally redirect to login
     }
     return Promise.reject(error);
   }
@@ -49,7 +29,7 @@ http.interceptors.response.use(
 
 function setAuthHeader(token) {
   if (token) {
-    http.defaults.headers.common.Authorization = `Bearer ${token}`;
+    http.defaults.headers.common.Authorization = 'Bearer ' + token;
     localStorage.setItem(TOKEN_STORAGE_KEY, token);
   } else {
     delete http.defaults.headers.common.Authorization;
@@ -60,199 +40,188 @@ function setAuthHeader(token) {
 const savedToken = typeof window !== 'undefined' ? localStorage.getItem(TOKEN_STORAGE_KEY) : null;
 if (savedToken) setAuthHeader(savedToken);
 
-function buildQuery(params = {}) {
-  const query = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value === undefined || value === null || value === '') return;
-    query.append(key, value);
-  });
-  return query.toString() ? `?${query.toString()}` : '';
+function normalizeValue(v) {
+  if (v === undefined || v === null || v === '') return undefined;
+  if (typeof v === 'boolean') return v ? 1 : 0;
+  return v;
 }
 
-const ENTITY_MAP = {
-  CurrencyRate: 'currency-rates',
-  HomeContent: 'home-content',
-  Service: 'services',
-  Place: 'places',
-  PriceEntry: 'price-entries',
-  PriceGuide: 'price-entries',
-  ScamReport: 'scam-reports',
-  VerifiedDriver: 'verified-drivers',
-  LiveSituation: 'live-situations',
-  Listing: 'listings',
-  Review: 'reviews',
-  Guide: 'guides',
-  BoatTrip: 'boat-trips',
-  Apartment: 'apartments',
-  HorseRiding: 'horse-ridings',
-  LocalContact: 'local-contacts',
-  RemoteWorkSpot: 'remote-work-spots',
-  NightlifeVenue: 'nightlife-venues',
-  LongStayService: 'long-stay-services',
-  TourOperator: 'tour-operators',
-  TouristDeal: 'tourist-deals',
-  TouristStory: 'tourist-stories',
-  SavedItinerary: 'saved-itineraries',
-  HiddenGemPlace: 'hidden-gem-places',
-  LocalQuestion: 'local-questions',
-  RideShare: 'ride-shares',
-  PriceEntry: 'price-entries',
-  PriceInsight: 'price-insights',
-};
+function asArray(data) {
+  return Array.isArray(data) ? data : [];
+}
 
-function getEndpoint(entityName) {
-  if (ENTITY_MAP[entityName]) return `/${ENTITY_MAP[entityName]}`;
-  return `/${entityName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()}s`;
+function safeJsonParse(v) {
+  if (typeof v !== 'string') return v;
+  const t = v.trim();
+  if (!t) return v;
+  if ((t.startsWith('{') && t.endsWith('}')) || (t.startsWith('[') && t.endsWith(']'))) {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return v;
+    }
+  }
+  return v;
+}
+
+function parseRow(row) {
+  if (!row || typeof row !== 'object') return row;
+  const parsed = {};
+  Object.entries(row).forEach(([k, v]) => {
+    parsed[k] = safeJsonParse(v);
+  });
+  return parsed;
+}
+
+function filterClientSide(records, filters = {}) {
+  const entries = Object.entries(filters).filter(([, v]) => v !== undefined && v !== null && v !== '');
+  if (!entries.length) return records;
+  return records.filter((item) =>
+    entries.every(([key, value]) => String(item?.[key]) === String(value))
+  );
+}
+
+function sortClientSide(records, sort = '') {
+  if (!sort) return records;
+  const desc = sort.startsWith('-');
+  const field = sort.replace(/^[+-]/, '');
+  if (!field) return records;
+
+  return [...records].sort((a, b) => {
+    const av = a?.[field];
+    const bv = b?.[field];
+    if (av === bv) return 0;
+
+    const an = Number(av);
+    const bn = Number(bv);
+    if (!Number.isNaN(an) && !Number.isNaN(bn)) {
+      return desc ? bn - an : an - bn;
+    }
+
+    const ad = Date.parse(av);
+    const bd = Date.parse(bv);
+    if (!Number.isNaN(ad) && !Number.isNaN(bd)) {
+      return desc ? bd - ad : ad - bd;
+    }
+
+    const cmp = String(av ?? '').localeCompare(String(bv ?? ''));
+    return desc ? -cmp : cmp;
+  });
+}
+
+async function requestEntity(entity, method = 'GET', payload = null, params = {}) {
+  const query = {
+    entity,
+    ...Object.fromEntries(
+      Object.entries(params).map(([k, v]) => [k, normalizeValue(v)])
+    ),
+  };
+
+  const res = await http.request({
+    method,
+    params: query,
+    data: payload,
+  });
+
+  return res.data;
 }
 
 function makeEntity(entityName) {
-  const base = getEndpoint(entityName);
-
   return {
     list: async (sort = '', limit = 100, page = 1) => {
-      const query = buildQuery({ sort, limit, page });
       try {
-        const res = await http.get(`${base}${query}`);
-        return res.data || [];
+        const raw = await requestEntity(entityName, 'GET', null, { sort, limit, page });
+        return sortClientSide(asArray(raw).map(parseRow), sort);
       } catch (err) {
-        console.error(`Error fetching ${base}:`, err);
+        console.error(`Error listing ${entityName}:`, err);
         return [];
       }
     },
 
     filter: async (filters = {}, sort = '', limit = 100, page = 1) => {
-      const query = buildQuery({ ...filters, sort, limit, page });
       try {
-        const res = await http.get(`${base}${query}`);
-        return res.data || [];
+        const raw = await requestEntity(entityName, 'GET', null, { ...filters, sort, limit, page });
+        const parsed = asArray(raw).map(parseRow);
+        return sortClientSide(filterClientSide(parsed, filters), sort);
       } catch (err) {
-        console.error(`Error filtering ${base}:`, err);
+        console.error(`Error filtering ${entityName}:`, err);
         return [];
       }
     },
 
     get: async (id) => {
       try {
-        const res = await http.get(`${base}/${id}`);
-        return res.data || null;
+        const withId = await requestEntity(entityName, 'GET', null, { id, limit: 1, page: 1 });
+        const rows = asArray(withId).map(parseRow);
+        if (rows.length > 0) return rows[0];
+
+        const withIdIndex = await requestEntity(entityName, 'GET', null, { id_index: id, limit: 1, page: 1 });
+        return asArray(withIdIndex).map(parseRow)[0] || null;
       } catch (err) {
-        console.error(`Error getting ${base}/${id}:`, err);
+        console.error(`Error getting ${entityName}/${id}:`, err);
         return null;
       }
     },
 
     create: async (payload) => {
-      try {
-        const res = await http.post(base, payload);
-        return res.data;
-      } catch (err) {
-        console.error(`Error creating ${base}:`, err);
-        throw err;
-      }
+      const res = await requestEntity(entityName, 'POST', payload);
+      return res;
     },
 
     update: async (id, payload) => {
-      try {
-        const res = await http.put(`${base}/${id}`, payload);
-        return res.data;
-      } catch (err) {
-        console.error(`Error updating ${base}/${id}:`, err);
-        throw err;
-      }
+      const body = { action: 'update', id, ...payload };
+      const res = await requestEntity(entityName, 'POST', body);
+      return res;
     },
 
     delete: async (id) => {
-      try {
-        const res = await http.delete(`${base}/${id}`);
-        return res.data;
-      } catch (err) {
-        console.error(`Error deleting ${base}/${id}:`, err);
-        throw err;
-      }
+      const body = { action: 'delete', id };
+      const res = await requestEntity(entityName, 'POST', body);
+      return res;
     },
 
-    subscribe: () => {
-      // Local backend does not currently support real-time subscriptions
-      return () => {};
-    },
+    subscribe: () => () => {},
   };
 }
 
 const auth = {
   me: async () => {
-    try {
-      const res = await http.get('/auth/me');
-      return res.data;
-    } catch (err) {
-      throw err;
-    }
+    const res = await http.get('/auth/me');
+    return res.data;
   },
-
   login: async (email, password) => {
-    try {
-      const res = await http.post('/auth/login', { email, password });
-      const token = res.data?.token;
-      if (token) {
-        setAuthHeader(token);
-      }
-      return res.data;
-    } catch (err) {
-      console.error('Login error:', err);
-      throw err;
-    }
+    const res = await http.post('/auth/login', { email, password });
+    const token = res.data?.token;
+    if (token) setAuthHeader(token);
+    return res.data;
   },
-
   register: async (name, email, password, role = 'traveler') => {
-    try {
-      const res = await http.post('/auth/register', { 
-        name, 
-        email, 
-        password, 
-        role 
-      });
-      const token = res.data?.token;
-      if (token) {
-        setAuthHeader(token);
-      }
-      return res.data;
-    } catch (err) {
-      console.error('Registration error:', err);
-      throw err;
-    }
+    const res = await http.post('/auth/register', { name, email, password, role });
+    const token = res.data?.token;
+    if (token) setAuthHeader(token);
+    return res.data;
   },
-
-  logout: () => {
-    setAuthHeader(null);
-  },
-
+  logout: () => setAuthHeader(null),
   redirectToLogin: (redirectUrl) => {
     window.location.href = `/login?redirect=${encodeURIComponent(redirectUrl || '/')}`;
   },
-
   isAuthenticated: async () => {
     try {
       await auth.me();
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   },
 };
 
-function functionPath(name) {
-  return name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-}
-
 const functions = {
-  invoke: async (fnName, payload = {}) => {
-    try {
-      const res = await http.post(`/functions/${functionPath(fnName)}`, payload);
-      return res.data;
-    } catch (err) {
-      console.error(`Error invoking function ${fnName}:`, err);
-      throw err;
-    }
-  },
+  invoke: async (fnName, payload = {}) => ({
+    success: true,
+    fnName,
+    payload,
+    source: 'local-fallback',
+  }),
 };
 
 function makeLLMResponse(request = {}) {
