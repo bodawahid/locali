@@ -1,0 +1,103 @@
+{
+  "name": "PriceEntry",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Price Title (e.g. Short Taxi Ride)"
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "visa",
+        "taxi",
+        "rent",
+        "food_drinks",
+        "activities_tours",
+        "shopping",
+        "medical",
+        "telecom",
+        "other"
+      ]
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan",
+        "el-gouna",
+        "cairo",
+        "all"
+      ]
+    },
+    "min_price": {
+      "type": "number",
+      "title": "Min Price"
+    },
+    "max_price": {
+      "type": "number",
+      "title": "Max Price"
+    },
+    "currency": {
+      "type": "string",
+      "title": "Currency",
+      "enum": [
+        "EGP",
+        "USD",
+        "EUR"
+      ],
+      "default": "EGP"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes / Context for travelers"
+    },
+    "source_label": {
+      "type": "string",
+      "title": "Source",
+      "enum": [
+        "manual_verified",
+        "tourist_reports",
+        "official_source",
+        "ai_suggested"
+      ],
+      "default": "manual_verified"
+    },
+    "alert_type": {
+      "type": "string",
+      "title": "Alert",
+      "enum": [
+        "none",
+        "price_increased",
+        "scam_risk"
+      ],
+      "default": "none"
+    },
+    "is_active": {
+      "type": "boolean",
+      "title": "Active / Visible",
+      "default": true
+    },
+    "pending_suggestion": {
+      "type": "string",
+      "title": "AI Suggested Range (pending admin review)"
+    },
+    "last_verified_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Last Verified Date"
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "city",
+    "min_price",
+    "max_price",
+    "currency"
+  ]
+}

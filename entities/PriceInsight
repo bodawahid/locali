@@ -1,0 +1,82 @@
+{
+  "name": "PriceInsight",
+  "type": "object",
+  "properties": {
+    "service_name": {
+      "type": "string",
+      "title": "Service / Item (e.g. Taxi Ride 5\u201310 min)"
+    },
+    "location_label": {
+      "type": "string",
+      "title": "Location Label (e.g. Hurghada Marina)"
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan",
+        "el-gouna",
+        "cairo",
+        "other"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "taxi",
+        "food_drinks",
+        "activities",
+        "shopping",
+        "accommodation",
+        "other"
+      ]
+    },
+    "reported_tourist_price": {
+      "type": "number",
+      "title": "Reported Tourist Price (EGP)"
+    },
+    "local_price_min": {
+      "type": "number",
+      "title": "Local Range \u2014 Min (EGP)"
+    },
+    "local_price_max": {
+      "type": "number",
+      "title": "Local Range \u2014 Max (EGP)"
+    },
+    "report_count": {
+      "type": "integer",
+      "title": "Number of Reports",
+      "default": 1
+    },
+    "trust_label": {
+      "type": "string",
+      "title": "Trust Label",
+      "enum": [
+        "verified",
+        "community",
+        "unverified"
+      ],
+      "default": "unverified"
+    },
+    "context_note": {
+      "type": "string",
+      "title": "Context Note (seasonal, demand, etc.)"
+    },
+    "is_active": {
+      "type": "boolean",
+      "title": "Visible",
+      "default": true
+    }
+  },
+  "required": [
+    "service_name",
+    "city",
+    "category",
+    "local_price_min",
+    "local_price_max"
+  ]
+}

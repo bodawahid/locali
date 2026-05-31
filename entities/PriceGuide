@@ -1,0 +1,64 @@
+{
+  "name": "PriceGuide",
+  "type": "object",
+  "properties": {
+    "item": {
+      "type": "string",
+      "title": "Item/Service"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "transport",
+        "food",
+        "accommodation",
+        "activities",
+        "shopping",
+        "telecom",
+        "medical",
+        "other"
+      ],
+      "title": "Category"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "all"
+      ],
+      "title": "City"
+    },
+    "local_price": {
+      "type": "number",
+      "title": "Local Price (EGP)"
+    },
+    "fair_tourist_price": {
+      "type": "number",
+      "title": "Fair Tourist Price (EGP)"
+    },
+    "scam_price": {
+      "type": "number",
+      "title": "Scam/Inflated Price (EGP)"
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "item",
+    "category",
+    "city",
+    "local_price",
+    "fair_tourist_price"
+  ]
+}

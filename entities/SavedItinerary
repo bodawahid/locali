@@ -1,0 +1,43 @@
+{
+  "name": "SavedItinerary",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "title": "City"
+    },
+    "city_label": {
+      "type": "string",
+      "title": "City Label"
+    },
+    "days": {
+      "type": "integer",
+      "title": "Days"
+    },
+    "budget": {
+      "type": "string",
+      "title": "Budget Level"
+    },
+    "interests": {
+      "type": "string",
+      "title": "Interests"
+    },
+    "travelers": {
+      "type": "integer",
+      "title": "Travelers"
+    },
+    "itinerary_text": {
+      "type": "string",
+      "title": "Itinerary Text"
+    },
+    "user_email": {
+      "type": "string",
+      "title": "User Email"
+    }
+  },
+  "required": [
+    "city",
+    "itinerary_text",
+    "user_email"
+  ]
+}

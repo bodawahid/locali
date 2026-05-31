@@ -1,0 +1,97 @@
+{
+  "name": "HiddenGemPlace",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Place Name"
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "Luxor",
+        "Aswan",
+        "Sinai",
+        "Hurghada",
+        "Marsa Alam",
+        "El Gouna",
+        "Dahab",
+        "Nuweiba"
+      ]
+    },
+    "area": {
+      "type": "string",
+      "title": "Area / Neighbourhood"
+    },
+    "region": {
+      "type": "string",
+      "title": "Region",
+      "enum": [
+        "Luxor",
+        "Aswan",
+        "Sinai",
+        "Red Sea",
+        "El Gouna"
+      ]
+    },
+    "description": {
+      "type": "string",
+      "title": "Short Description"
+    },
+    "why_special": {
+      "type": "string",
+      "title": "Why It's Special"
+    },
+    "tag": {
+      "type": "string",
+      "title": "Category Tag",
+      "enum": [
+        "Adventure",
+        "Chill",
+        "Cultural",
+        "Luxury",
+        "Explorer",
+        "Nature"
+      ]
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Image URL (fallback)"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image Upload",
+      "ui:widget": "file"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Additional Photos"
+    },
+    "gem_number": {
+      "type": "integer",
+      "title": "Display Number (1\u201330)"
+    },
+    "is_published": {
+      "type": "boolean",
+      "title": "Published / Visible",
+      "default": true
+    },
+    "keywords": {
+      "type": "string",
+      "title": "Search Keywords"
+    }
+  },
+  "required": [
+    "title",
+    "city",
+    "region",
+    "description",
+    "why_special",
+    "tag"
+  ]
+}

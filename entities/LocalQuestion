@@ -1,0 +1,51 @@
+{
+  "name": "LocalQuestion",
+  "type": "object",
+  "properties": {
+    "question_text": {
+      "type": "string",
+      "title": "Question"
+    },
+    "user_nationality": {
+      "type": "string",
+      "title": "User Nationality Label"
+    },
+    "user_flag": {
+      "type": "string",
+      "title": "User Flag Emoji"
+    },
+    "assigned_persona_id": {
+      "type": "string",
+      "title": "Assigned Persona ID"
+    },
+    "persona_name": {
+      "type": "string",
+      "title": "Persona Name (shown to user)"
+    },
+    "persona_flag": {
+      "type": "string",
+      "title": "Persona Flag"
+    },
+    "persona_city": {
+      "type": "string",
+      "title": "Persona City"
+    },
+    "answer_text": {
+      "type": "string",
+      "title": "Answer (admin writes this)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "answered"
+      ],
+      "title": "Status",
+      "default": "pending"
+    }
+  },
+  "required": [
+    "question_text",
+    "user_nationality"
+  ]
+}

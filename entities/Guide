@@ -1,0 +1,114 @@
+{
+  "name": "Guide",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "title": "Full Name"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "license_id": {
+      "type": "string",
+      "title": "License ID (\u0643\u0627\u0631\u0646\u064a\u0647 \u0627\u0644\u0625\u0631\u0634\u0627\u062f)"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan"
+      ],
+      "title": "Primary City"
+    },
+    "cities_covered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Cities Covered"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages Spoken"
+    },
+    "tour_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Tour Types Offered"
+    },
+    "description": {
+      "type": "string",
+      "title": "About the Guide"
+    },
+    "price_half_day": {
+      "type": "number",
+      "title": "Half-Day Price (EGP)"
+    },
+    "price_full_day": {
+      "type": "number",
+      "title": "Full-Day Price (EGP)"
+    },
+    "phone_whatsapp": {
+      "type": "string",
+      "title": "WhatsApp / Phone"
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "title": "Approval Status",
+      "default": "pending"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified Badge",
+      "default": false
+    },
+    "years_experience": {
+      "type": "integer",
+      "title": "Years of Experience"
+    },
+    "specialties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Specialties"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "full_name",
+    "license_id",
+    "city",
+    "languages"
+  ]
+}

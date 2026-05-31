@@ -1,0 +1,102 @@
+{
+  "name": "LiveSituation",
+  "type": "object",
+  "properties": {
+    "city": {
+      "type": "string",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan",
+        "el-gouna",
+        "global"
+      ],
+      "title": "City"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "green",
+        "yellow",
+        "red"
+      ],
+      "title": "Status",
+      "default": "green"
+    },
+    "weather": {
+      "type": "string",
+      "title": "Weather Summary"
+    },
+    "temperature_c": {
+      "type": "number",
+      "title": "Temperature (\u00b0C)"
+    },
+    "traffic": {
+      "type": "string",
+      "title": "Traffic & Transport"
+    },
+    "alerts": {
+      "type": "string",
+      "title": "Safety Alerts"
+    },
+    "events": {
+      "type": "string",
+      "title": "Events / Festivals"
+    },
+    "recommendation": {
+      "type": "string",
+      "title": "Tourist Recommendation"
+    },
+    "prices_summary": {
+      "type": "string",
+      "title": "Prices Summary"
+    },
+    "meal_range": {
+      "type": "string",
+      "title": "Average Meal Range (EGP)"
+    },
+    "coffee_range": {
+      "type": "string",
+      "title": "Coffee / Drink Range (EGP)"
+    },
+    "taxi_range": {
+      "type": "string",
+      "title": "Short Taxi Ride Range (EGP)"
+    },
+    "usd_to_egp": {
+      "type": "number",
+      "title": "USD \u2192 EGP Rate"
+    },
+    "eur_to_egp": {
+      "type": "number",
+      "title": "EUR \u2192 EGP Rate"
+    },
+    "rub_to_egp": {
+      "type": "number",
+      "title": "RUB \u2192 EGP Rate"
+    },
+    "gbp_to_egp": {
+      "type": "number",
+      "title": "GBP \u2192 EGP Rate"
+    },
+    "currency_note": {
+      "type": "string",
+      "title": "Currency Note"
+    },
+    "update_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Update Date"
+    },
+    "source": {
+      "type": "string",
+      "title": "Data Source"
+    }
+  },
+  "required": [
+    "city",
+    "status",
+    "update_date"
+  ]
+}

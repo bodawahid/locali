@@ -1,0 +1,88 @@
+{
+  "name": "NightlifeVenue",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Venue Name"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "beach_club",
+        "nightclub",
+        "rooftop",
+        "yacht",
+        "vip_lounge"
+      ],
+      "title": "Type"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location/Area"
+    },
+    "price_range": {
+      "type": "string",
+      "enum": [
+        "budget",
+        "moderate",
+        "premium",
+        "luxury"
+      ],
+      "title": "Price Range"
+    },
+    "safety_rating": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "moderate",
+        "use_caution"
+      ],
+      "title": "Safety Rating"
+    },
+    "entry_fee": {
+      "type": "number",
+      "title": "Entry Fee (EGP)"
+    },
+    "dress_code": {
+      "type": "string",
+      "title": "Dress Code"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified",
+      "default": false
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "name",
+    "city",
+    "type"
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "name": "Service",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Service Name"
+    },
+    "name_ru": {
+      "type": "string",
+      "title": "Name (Russian)"
+    },
+    "name_de": {
+      "type": "string",
+      "title": "Name (German)"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "restaurant",
+        "medical",
+        "transport",
+        "activities",
+        "kids_family",
+        "sim_internet",
+        "nightlife",
+        "remote_work",
+        "long_stay",
+        "other"
+      ],
+      "title": "Category"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "description_ru": {
+      "type": "string",
+      "title": "Description (Russian)"
+    },
+    "description_de": {
+      "type": "string",
+      "title": "Description (German)"
+    },
+    "address": {
+      "type": "string",
+      "title": "Address"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone"
+    },
+    "website": {
+      "type": "string",
+      "title": "Website"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Photos"
+    },
+    "latitude": {
+      "type": "number",
+      "title": "Latitude"
+    },
+    "longitude": {
+      "type": "number",
+      "title": "Longitude"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified",
+      "default": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured Listing",
+      "default": false
+    },
+    "scam_score": {
+      "type": "number",
+      "title": "Scam Probability Score",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating",
+      "minimum": 0,
+      "maximum": 5,
+      "default": 0
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "price_range": {
+      "type": "string",
+      "enum": [
+        "budget",
+        "moderate",
+        "premium"
+      ],
+      "title": "Price Range"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags"
+    },
+    "commission_rate": {
+      "type": "number",
+      "title": "Commission Rate % (Admin Only \u2014 0 = inactive)",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "subscription_tier": {
+      "type": "string",
+      "enum": [
+        "none",
+        "verified",
+        "featured"
+      ],
+      "title": "Subscription Tier",
+      "default": "none"
+    },
+    "discount_views": {
+      "type": "integer",
+      "title": "Discount Code Views (LOCALI)",
+      "default": 0
+    },
+    "discount_claims": {
+      "type": "integer",
+      "title": "Discount Code Claims",
+      "default": 0
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "city"
+  ]
+}

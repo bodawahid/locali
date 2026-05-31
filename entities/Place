@@ -1,0 +1,139 @@
+{
+  "name": "Place",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "cairo",
+        "luxor",
+        "aswan",
+        "el-gouna",
+        "dahab",
+        "alexandria"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "title": "Category",
+      "enum": [
+        "hotel",
+        "apartment",
+        "experience",
+        "service"
+      ]
+    },
+    "price": {
+      "type": "number",
+      "title": "Price"
+    },
+    "price_unit": {
+      "type": "string",
+      "title": "Price Unit",
+      "enum": [
+        "per_night",
+        "per_service",
+        "per_person"
+      ],
+      "default": "per_night"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Images"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    },
+    "google_maps_link": {
+      "type": "string",
+      "title": "Google Maps Link"
+    },
+    "address": {
+      "type": "string",
+      "title": "Address"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp Number"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone"
+    },
+    "rating": {
+      "type": "number",
+      "title": "Rating",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "is_available": {
+      "type": "boolean",
+      "title": "Available",
+      "default": true
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "host_email": {
+      "type": "string",
+      "title": "Host Email"
+    },
+    "host_name": {
+      "type": "string",
+      "title": "Host Name"
+    },
+    "inquiry_count": {
+      "type": "integer",
+      "title": "Inquiry Count",
+      "default": 0
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Amenities"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "city",
+    "category",
+    "price",
+    "whatsapp"
+  ]
+}

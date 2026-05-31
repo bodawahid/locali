@@ -1,0 +1,46 @@
+{
+  "name": "Review",
+  "type": "object",
+  "properties": {
+    "service_id": {
+      "type": "string",
+      "title": "Service ID"
+    },
+    "rating": {
+      "type": "number",
+      "title": "Rating",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "comment": {
+      "type": "string",
+      "title": "Comment"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan"
+      ],
+      "title": "City"
+    },
+    "author_country": {
+      "type": "string",
+      "title": "Author Country"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Photos"
+    }
+  },
+  "required": [
+    "service_id",
+    "rating",
+    "comment"
+  ]
+}

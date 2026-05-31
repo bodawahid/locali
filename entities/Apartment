@@ -1,0 +1,135 @@
+{
+  "name": "Apartment",
+  "type": "object",
+  "properties": {
+    "host_name": {
+      "type": "string",
+      "title": "Host Name"
+    },
+    "host_phone": {
+      "type": "string",
+      "title": "Host Phone/WhatsApp (internal only)"
+    },
+    "title": {
+      "type": "string",
+      "title": "Listing Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "area": {
+      "type": "string",
+      "title": "Area/Neighbourhood"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Photos"
+    },
+    "price_per_night_egp": {
+      "type": "number",
+      "title": "Price Per Night (EGP)"
+    },
+    "capacity": {
+      "type": "integer",
+      "title": "Max Guests",
+      "minimum": 1,
+      "default": 2
+    },
+    "bedrooms": {
+      "type": "integer",
+      "title": "Bedrooms",
+      "default": 1
+    },
+    "bathrooms": {
+      "type": "integer",
+      "title": "Bathrooms",
+      "default": 1
+    },
+    "amenities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Amenities"
+    },
+    "rules": {
+      "type": "string",
+      "title": "House Rules"
+    },
+    "min_nights": {
+      "type": "integer",
+      "title": "Minimum Stay (nights)",
+      "default": 2
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Locali Verified Stay",
+      "default": false
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured Listing",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "suspended"
+      ],
+      "title": "Status",
+      "default": "pending"
+    },
+    "commission_rate": {
+      "type": "number",
+      "title": "Commission Rate %",
+      "default": 10
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "discount_views": {
+      "type": "integer",
+      "title": "LOCALI Code Views",
+      "default": 0
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "title",
+    "city",
+    "price_per_night_egp",
+    "capacity",
+    "host_name",
+    "host_phone"
+  ]
+}

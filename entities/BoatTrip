@@ -1,0 +1,118 @@
+{
+  "name": "BoatTrip",
+  "type": "object",
+  "properties": {
+    "boat_name": {
+      "type": "string",
+      "title": "Boat Name"
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "dahab",
+        "el-gouna",
+        "aswan"
+      ]
+    },
+    "boat_type": {
+      "type": "string",
+      "title": "Boat Type",
+      "enum": [
+        "yacht",
+        "speedboat",
+        "fishing_boat",
+        "sailboat",
+        "catamaran"
+      ]
+    },
+    "price": {
+      "type": "number",
+      "title": "Price (EGP)"
+    },
+    "price_type": {
+      "type": "string",
+      "title": "Price Type",
+      "enum": [
+        "per_hour",
+        "per_trip",
+        "per_person"
+      ],
+      "default": "per_trip"
+    },
+    "capacity": {
+      "type": "integer",
+      "title": "Capacity (people)",
+      "minimum": 1
+    },
+    "duration_hours": {
+      "type": "number",
+      "title": "Duration (hours)"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Photos"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp Number"
+    },
+    "discount_code": {
+      "type": "string",
+      "title": "Discount Code",
+      "default": "LOCALI10"
+    },
+    "includes": {
+      "type": "string",
+      "title": "What's Included"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured",
+      "default": false
+    },
+    "discount_clicks": {
+      "type": "integer",
+      "title": "Discount Clicks",
+      "default": 0
+    },
+    "whatsapp_clicks": {
+      "type": "integer",
+      "title": "WhatsApp Clicks",
+      "default": 0
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "boat_name",
+    "city",
+    "boat_type",
+    "price",
+    "capacity",
+    "whatsapp"
+  ]
+}

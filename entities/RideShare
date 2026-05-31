@@ -1,0 +1,94 @@
+{
+  "name": "RideShare",
+  "type": "object",
+  "properties": {
+    "from_city": {
+      "type": "string",
+      "title": "From City"
+    },
+    "to_city": {
+      "type": "string",
+      "title": "To City"
+    },
+    "departure_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Departure Date"
+    },
+    "departure_time": {
+      "type": "string",
+      "title": "Departure Time"
+    },
+    "seats_available": {
+      "type": "integer",
+      "title": "Seats Available",
+      "minimum": 1,
+      "maximum": 8
+    },
+    "price_per_seat": {
+      "type": "number",
+      "title": "Price Per Seat (EGP)"
+    },
+    "contact_name": {
+      "type": "string",
+      "title": "Driver Full Name"
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "Contact Phone/WhatsApp"
+    },
+    "national_id_last4": {
+      "type": "string",
+      "title": "National ID Last 4 Digits"
+    },
+    "plate_number": {
+      "type": "string",
+      "title": "Car Plate Number"
+    },
+    "car_type": {
+      "type": "string",
+      "title": "Car Model"
+    },
+    "gender_preference": {
+      "type": "string",
+      "enum": [
+        "any",
+        "women_only",
+        "mixed"
+      ],
+      "title": "Gender Preference",
+      "default": "any"
+    },
+    "driver_rating": {
+      "type": "number",
+      "title": "Driver Rating (1-5)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "notes": {
+      "type": "string",
+      "title": "Notes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "full",
+        "cancelled"
+      ],
+      "title": "Status",
+      "default": "active"
+    }
+  },
+  "required": [
+    "from_city",
+    "to_city",
+    "departure_date",
+    "seats_available",
+    "price_per_seat",
+    "contact_phone",
+    "contact_name",
+    "national_id_last4",
+    "plate_number"
+  ]
+}

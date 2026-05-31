@@ -1,0 +1,93 @@
+{
+  "name": "LocalContact",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Full Name"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan"
+      ],
+      "title": "City"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "driver",
+        "guide",
+        "translator",
+        "dive_instructor",
+        "tour_operator",
+        "fixer"
+      ],
+      "title": "Service Type"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages Spoken"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "phone_whatsapp": {
+      "type": "string",
+      "title": "WhatsApp / Phone"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified Badge",
+      "default": false
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating (1\u20135)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Number of Reviews",
+      "default": 0
+    },
+    "price_range": {
+      "type": "string",
+      "title": "Price Range / Day Rate"
+    },
+    "specialties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Specialties / Tags"
+    },
+    "years_experience": {
+      "type": "integer",
+      "title": "Years of Experience"
+    },
+    "is_active": {
+      "type": "boolean",
+      "title": "Currently Available",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "city",
+    "service_type",
+    "languages"
+  ]
+}

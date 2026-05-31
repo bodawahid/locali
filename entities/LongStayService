@@ -1,0 +1,73 @@
+{
+  "name": "LongStayService",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Service Name"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "apartment",
+        "cleaning",
+        "maintenance",
+        "grocery_delivery",
+        "laundry",
+        "internet",
+        "other"
+      ],
+      "title": "Category"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "price_info": {
+      "type": "string",
+      "title": "Price Info"
+    },
+    "contact_phone": {
+      "type": "string",
+      "title": "Contact Phone/WhatsApp"
+    },
+    "website": {
+      "type": "string",
+      "title": "Website"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified",
+      "default": false
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages Spoken"
+    }
+  },
+  "required": [
+    "name",
+    "city",
+    "category"
+  ]
+}

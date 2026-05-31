@@ -1,0 +1,91 @@
+{
+  "name": "RemoteWorkSpot",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Name"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "cafe",
+        "coworking",
+        "hotel_lobby",
+        "library"
+      ],
+      "title": "Type"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location/Area"
+    },
+    "wifi_speed_mbps": {
+      "type": "number",
+      "title": "WiFi Speed (Mbps)"
+    },
+    "wifi_reliability": {
+      "type": "string",
+      "enum": [
+        "excellent",
+        "good",
+        "fair",
+        "poor"
+      ],
+      "title": "WiFi Reliability"
+    },
+    "price_per_hour": {
+      "type": "number",
+      "title": "Price Per Hour (EGP)"
+    },
+    "price_per_day": {
+      "type": "number",
+      "title": "Price Per Day (EGP)"
+    },
+    "power_outlets": {
+      "type": "boolean",
+      "title": "Power Outlets Available",
+      "default": true
+    },
+    "ac": {
+      "type": "boolean",
+      "title": "Air Conditioning",
+      "default": true
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified",
+      "default": false
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "name",
+    "city",
+    "type"
+  ]
+}

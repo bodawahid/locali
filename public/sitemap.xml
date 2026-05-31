@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://localiegypt.com/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <lastmod>2026-04-09</lastmod>
+  </url>
+
+  <!-- City pages -->
+  <url><loc>https://localiegypt.com/city/hurghada</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/sharm-el-sheikh</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/luxor</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/aswan</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/el-gouna</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- City sub-pages -->
+  <url><loc>https://localiegypt.com/city/hurghada/prices</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/scams</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/restaurants</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/things-to-do</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/transport</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/atm-currency</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/hurghada/safety</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/sharm-el-sheikh/prices</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/sharm-el-sheikh/scams</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/sharm-el-sheikh/restaurants</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/luxor/prices</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/luxor/scams</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/city/aswan/prices</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- Core tools & guides -->
+  <url><loc>https://localiegypt.com/price-checker</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/scam-map</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/egypt-safe-now</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/currency-rates</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/emergency</loc><changefreq>weekly</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/cost-calculator</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/before-you-land</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/visa-entry</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/sim-cards</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/phrases</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/women-safety</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/safety-guide</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- Services & listings -->
+  <url><loc>https://localiegypt.com/services</loc><changefreq>daily</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/hotels</loc><changefreq>daily</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/book</loc><changefreq>daily</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/beaches</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/nightlife</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/deals</loc><changefreq>daily</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/guides</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/verified-drivers</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/apartments</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/tour-operators</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- AI & live -->
+  <url><loc>https://localiegypt.com/ai-assistant</loc><changefreq>daily</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/live-situation</loc><changefreq>daily</changefreq><priority>0.9</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/smart-guide</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- Comparison & decision pages -->
+  <url><loc>https://localiegypt.com/egypt-vs-dubai</loc><changefreq>weekly</changefreq><priority>0.8</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/trip-decision</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/last-minute-egypt</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/nationality-guide</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- Community & stories -->
+  <url><loc>https://localiegypt.com/tourist-stories</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/featured-locals</loc><changefreq>weekly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/ask-a-local</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+
+  <!-- Trust & authority pages -->
+  <url><loc>https://localiegypt.com/about</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/data-sources</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/methodology</loc><changefreq>monthly</changefreq><priority>0.7</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/verify-apply</loc><changefreq>monthly</changefreq><priority>0.6</priority><lastmod>2026-04-09</lastmod></url>
+  <url><loc>https://localiegypt.com/terms</loc><changefreq>monthly</changefreq><priority>0.5</priority><lastmod>2026-04-09</lastmod></url>
+
+</urlset>

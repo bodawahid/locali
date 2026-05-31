@@ -1,0 +1,74 @@
+{
+  "name": "TouristStory",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Story Title"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan",
+        "cairo"
+      ],
+      "title": "City"
+    },
+    "tourist_nationality": {
+      "type": "string",
+      "title": "Tourist Nationality"
+    },
+    "story_type": {
+      "type": "string",
+      "enum": [
+        "scam_avoided",
+        "scam_happened",
+        "great_experience",
+        "helpful_local",
+        "safety_tip",
+        "unexpected_gem"
+      ],
+      "title": "Story Type"
+    },
+    "what_happened": {
+      "type": "string",
+      "title": "What Happened"
+    },
+    "how_handled": {
+      "type": "string",
+      "title": "How They Handled It"
+    },
+    "lesson_learned": {
+      "type": "string",
+      "title": "Lesson Learned"
+    },
+    "is_positive": {
+      "type": "boolean",
+      "title": "Overall Positive Experience?",
+      "default": true
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified Story",
+      "default": false
+    },
+    "upvotes": {
+      "type": "integer",
+      "title": "Helpful Upvotes",
+      "default": 0
+    },
+    "author_name": {
+      "type": "string",
+      "title": "Author (first name or alias)"
+    }
+  },
+  "required": [
+    "title",
+    "city",
+    "what_happened",
+    "lesson_learned"
+  ]
+}

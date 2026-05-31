@@ -1,0 +1,69 @@
+{
+  "name": "TouristDeal",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Deal Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan"
+      ],
+      "title": "City"
+    },
+    "service_id": {
+      "type": "string",
+      "title": "Related Service ID"
+    },
+    "discount_percent": {
+      "type": "number",
+      "title": "Discount %"
+    },
+    "original_price": {
+      "type": "number",
+      "title": "Original Price (EGP)"
+    },
+    "deal_price": {
+      "type": "number",
+      "title": "Deal Price (EGP)"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date",
+      "title": "Valid Until"
+    },
+    "is_active": {
+      "type": "boolean",
+      "title": "Active",
+      "default": true
+    },
+    "photo": {
+      "type": "string",
+      "title": "Photo"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp Number (e.g. 201001234567)"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "city"
+  ]
+}

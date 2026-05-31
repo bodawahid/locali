@@ -1,0 +1,117 @@
+{
+  "name": "HorseRiding",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Experience Title"
+    },
+    "city": {
+      "type": "string",
+      "title": "City",
+      "enum": [
+        "hurghada",
+        "sharm-el-sheikh",
+        "dahab",
+        "el-gouna",
+        "aswan"
+      ]
+    },
+    "experience_type": {
+      "type": "string",
+      "title": "Experience Type",
+      "enum": [
+        "beach_ride",
+        "desert_ride",
+        "swimming_horses",
+        "sunrise_sunset_ride"
+      ]
+    },
+    "price": {
+      "type": "number",
+      "title": "Price (EGP)"
+    },
+    "price_type": {
+      "type": "string",
+      "title": "Price Type",
+      "enum": [
+        "per_person",
+        "per_hour"
+      ],
+      "default": "per_person"
+    },
+    "duration": {
+      "type": "string",
+      "title": "Duration (e.g. 2 hours)"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Photos"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp Number"
+    },
+    "discount_code": {
+      "type": "string",
+      "title": "Discount Code",
+      "default": "LOCALI10"
+    },
+    "skill_level": {
+      "type": "string",
+      "title": "Skill Level",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "all_levels"
+      ],
+      "default": "all_levels"
+    },
+    "status": {
+      "type": "string",
+      "title": "Status",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured",
+      "default": false
+    },
+    "discount_clicks": {
+      "type": "integer",
+      "title": "Discount Clicks",
+      "default": 0
+    },
+    "whatsapp_clicks": {
+      "type": "integer",
+      "title": "WhatsApp Clicks",
+      "default": 0
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "title",
+    "city",
+    "experience_type",
+    "price",
+    "duration",
+    "whatsapp"
+  ]
+}

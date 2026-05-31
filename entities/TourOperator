@@ -1,0 +1,125 @@
+{
+  "name": "TourOperator",
+  "type": "object",
+  "properties": {
+    "company_name": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "logo_url": {
+      "type": "string",
+      "title": "Logo URL"
+    },
+    "license_number": {
+      "type": "string",
+      "title": "Official Tourism License Number"
+    },
+    "description": {
+      "type": "string",
+      "title": "Company Description"
+    },
+    "cities_covered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Cities Covered"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages Supported"
+    },
+    "tour_packages": {
+      "type": "array",
+      "title": "Tour Packages",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "string"
+          },
+          "included": {
+            "type": "string"
+          },
+          "price_egp": {
+            "type": "number"
+          },
+          "min_group": {
+            "type": "integer"
+          },
+          "max_group": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "suspended",
+        "banned"
+      ],
+      "title": "Status",
+      "default": "pending"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified Badge",
+      "default": false
+    },
+    "complaint_count": {
+      "type": "integer",
+      "title": "Tourist Complaints",
+      "default": 0
+    },
+    "agreed_to_terms": {
+      "type": "boolean",
+      "title": "Agreed to Platform Terms"
+    },
+    "refund_policy": {
+      "type": "string",
+      "title": "Refund Policy"
+    },
+    "phone_internal": {
+      "type": "string",
+      "title": "Internal Contact (not shown to tourists)"
+    },
+    "email": {
+      "type": "string",
+      "title": "Email"
+    },
+    "interests_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Interest Tags (beach, culture, adventure, family)"
+    }
+  },
+  "required": [
+    "company_name",
+    "license_number",
+    "cities_covered",
+    "languages",
+    "agreed_to_terms"
+  ]
+}

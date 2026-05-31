@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', sans-serif;
+
+    /* Desert Luxury Palette */
+    --background: 0 0% 100%;          /* clean white */
+    --foreground: 220 25% 15%;       /* dark navy */
+    --card: 0 0% 100%;
+    --card-foreground: 20 40% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 40% 15%;
+    --primary: 20 40% 15%;           /* deep brown */
+    --primary-foreground: 36 40% 97%;
+    --secondary: 36 35% 93%;         /* warm beige #F5E9DA */
+    --secondary-foreground: 20 40% 15%;
+    --muted: 36 30% 91%;
+    --muted-foreground: 20 20% 45%;
+    --accent: 174 72% 35%;           /* teal #18978A */
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 90% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 60% 28%;
+    --success-foreground: 0 0% 100%;
+    --border: 36 20% 86%;
+    --input: 36 20% 86%;
+    --ring: 186 50% 36%;
+    --chart-1: 186 50% 36%;
+    --chart-2: 36 55% 64%;           /* desert sand #D8B58A */
+    --chart-3: 20 40% 15%;
+    --chart-4: 0 90% 50%;
+    --chart-5: 44 60% 54%;           /* gold #C9A24A */
+    --radius: 0.85rem;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 20 40% 15%;
+    --sidebar-primary: 20 40% 15%;
+    --sidebar-primary-foreground: 36 40% 97%;
+    --sidebar-accent: 36 35% 93%;
+    --sidebar-accent-foreground: 20 40% 15%;
+    --sidebar-border: 36 20% 86%;
+    --sidebar-ring: 186 50% 36%;
+  }
+
+  .dark {
+    --background: 213 60% 7%;
+    --foreground: 30 25% 96%;
+    --card: 213 50% 10%;
+    --card-foreground: 30 25% 96%;
+    --popover: 213 50% 10%;
+    --popover-foreground: 30 25% 96%;
+    --primary: 30 25% 96%;
+    --primary-foreground: 213 60% 11%;
+    --secondary: 213 40% 15%;
+    --secondary-foreground: 30 25% 96%;
+    --muted: 213 40% 15%;
+    --muted-foreground: 30 15% 60%;
+    --accent: 36 90% 44%;
+    --accent-foreground: 30 25% 96%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 153 43% 30%;
+    --success-foreground: 30 25% 96%;
+    --border: 213 40% 18%;
+    --input: 213 40% 18%;
+    --ring: 36 90% 44%;
+    --chart-1: 36 90% 50%;
+    --chart-2: 153 50% 40%;
+    --chart-3: 30 25% 80%;
+    --chart-4: 0 70% 50%;
+    --chart-5: 213 40% 50%;
+    --sidebar-background: 213 50% 10%;
+    --sidebar-foreground: 30 25% 96%;
+    --sidebar-primary: 30 25% 96%;
+    --sidebar-primary-foreground: 213 60% 11%;
+    --sidebar-accent: 213 40% 15%;
+    --sidebar-accent-foreground: 30 25% 96%;
+    --sidebar-border: 213 40% 18%;
+    --sidebar-ring: 36 90% 44%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-inter;
+  }
+
+  /* 3D card effect */
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .card-3d:hover {
+    transform: translateY(-4px) rotateX(2deg);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.14), 0 4px 8px rgba(0,0,0,0.08);
+  }
+  .card-3d:active {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+  }
+
+  /* Sunlight-optimized high-contrast text */
+  .text-sun-safe {
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+  }
+
+  /* 3D button press effect */
+  .btn-3d {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 6px 12px rgba(0,0,0,0.15);
+  }
+  .btn-3d:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.25), 0 2px 4px rgba(0,0,0,0.1);
+  }
+}
+
+/* Hide scrollbar for horizontal scroll areas */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,134 @@
+{
+  "name": "VerifiedDriver",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string",
+      "title": "Full Name"
+    },
+    "photo_url": {
+      "type": "string",
+      "title": "Photo URL"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp (internal only)"
+    },
+    "cities_covered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Cities Covered"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "title": "Languages Spoken"
+    },
+    "car_model": {
+      "type": "string",
+      "title": "Car Model"
+    },
+    "car_year": {
+      "type": "integer",
+      "title": "Car Year"
+    },
+    "car_color": {
+      "type": "string",
+      "title": "Car Color"
+    },
+    "plate_number": {
+      "type": "string",
+      "title": "Plate Number"
+    },
+    "national_id_last4": {
+      "type": "string",
+      "title": "National ID Last 4 Digits"
+    },
+    "description": {
+      "type": "string",
+      "title": "About the Driver"
+    },
+    "price_routes": {
+      "type": "array",
+      "title": "Fixed Price Routes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "route": {
+            "type": "string"
+          },
+          "price_egp": {
+            "type": "number"
+          },
+          "duration_min": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "avg_rating": {
+      "type": "number",
+      "title": "Average Rating",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Review Count",
+      "default": 0
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Locali Verified Driver",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "suspended"
+      ],
+      "title": "Status",
+      "default": "pending"
+    },
+    "commission_rate": {
+      "type": "number",
+      "title": "Commission Rate %",
+      "default": 10
+    },
+    "total_rides": {
+      "type": "integer",
+      "title": "Total Rides Completed",
+      "default": 0
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "full_name",
+    "whatsapp",
+    "cities_covered",
+    "languages",
+    "car_model",
+    "national_id_last4"
+  ],
+  "rls": {
+    "create": {},
+    "read": {},
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

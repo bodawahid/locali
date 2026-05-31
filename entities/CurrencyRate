@@ -1,0 +1,71 @@
+{
+  "name": "CurrencyRate",
+  "type": "object",
+  "properties": {
+    "usd": {
+      "type": "number",
+      "title": "USD \u2192 EGP"
+    },
+    "eur": {
+      "type": "number",
+      "title": "EUR \u2192 EGP"
+    },
+    "gbp": {
+      "type": "number",
+      "title": "GBP \u2192 EGP"
+    },
+    "rub": {
+      "type": "number",
+      "title": "RUB \u2192 EGP"
+    },
+    "pln": {
+      "type": "number",
+      "title": "PLN \u2192 EGP"
+    },
+    "cad": {
+      "type": "number",
+      "title": "CAD \u2192 EGP"
+    },
+    "aud": {
+      "type": "number",
+      "title": "AUD \u2192 EGP"
+    },
+    "sar": {
+      "type": "number",
+      "title": "SAR \u2192 EGP"
+    },
+    "rate_date": {
+      "type": "string",
+      "format": "date",
+      "title": "Rate Date"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "openexchangerates",
+        "google_finance",
+        "xe_com",
+        "fallback_emergency"
+      ],
+      "title": "Data Source"
+    },
+    "change_usd": {
+      "type": "number",
+      "title": "USD Change vs Previous Day (%)"
+    },
+    "change_eur": {
+      "type": "number",
+      "title": "EUR Change vs Previous Day (%)"
+    },
+    "alert": {
+      "type": "string",
+      "title": "Alert (if big change detected)"
+    }
+  },
+  "required": [
+    "usd",
+    "eur",
+    "rate_date",
+    "source"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "name": "ScamReport",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "sharm-el-sheikh",
+        "hurghada",
+        "luxor",
+        "aswan"
+      ],
+      "title": "City"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "taxi",
+        "shopping",
+        "tour",
+        "restaurant",
+        "hotel",
+        "money_exchange",
+        "street_vendor",
+        "other"
+      ],
+      "title": "Scam Category"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "Severity"
+    },
+    "latitude": {
+      "type": "number",
+      "title": "Latitude"
+    },
+    "longitude": {
+      "type": "number",
+      "title": "Longitude"
+    },
+    "location_name": {
+      "type": "string",
+      "title": "Location Name"
+    },
+    "amount_lost": {
+      "type": "number",
+      "title": "Amount Lost (EGP)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "dismissed"
+      ],
+      "title": "Status",
+      "default": "pending"
+    },
+    "upvotes": {
+      "type": "integer",
+      "title": "Upvotes",
+      "default": 0
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "city",
+    "category"
+  ]
+}

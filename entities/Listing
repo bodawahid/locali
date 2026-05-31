@@ -1,0 +1,143 @@
+{
+  "name": "Listing",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Business Name"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "hotel",
+        "restaurant",
+        "tour",
+        "guide",
+        "driver",
+        "transportation",
+        "company",
+        "activity",
+        "attraction"
+      ],
+      "title": "Category"
+    },
+    "city": {
+      "type": "string",
+      "enum": [
+        "cairo",
+        "giza",
+        "alexandria",
+        "hurghada",
+        "sharm-el-sheikh",
+        "luxor",
+        "aswan",
+        "el-gouna"
+      ],
+      "title": "City"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 5,
+      "title": "Rating (4.0+)"
+    },
+    "review_count": {
+      "type": "integer",
+      "title": "Number of Reviews"
+    },
+    "address": {
+      "type": "string",
+      "title": "Full Address"
+    },
+    "phone": {
+      "type": "string",
+      "title": "Phone Number"
+    },
+    "whatsapp": {
+      "type": "string",
+      "title": "WhatsApp Number"
+    },
+    "google_maps_link": {
+      "type": "string",
+      "title": "Google Maps URL"
+    },
+    "website": {
+      "type": "string",
+      "title": "Website URL"
+    },
+    "image": {
+      "type": "string",
+      "title": "Image URL (from Google Places)"
+    },
+    "description": {
+      "type": "string",
+      "title": "Auto-Generated SEO Description"
+    },
+    "latitude": {
+      "type": "number",
+      "title": "Latitude (for map)"
+    },
+    "longitude": {
+      "type": "number",
+      "title": "Longitude (for map)"
+    },
+    "google_place_id": {
+      "type": "string",
+      "title": "Google Place ID (for sync)"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "google_places",
+        "verified_local",
+        "manual_verified"
+      ],
+      "title": "Data Source"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "title": "Verified Listing",
+      "default": false
+    },
+    "last_synced": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Last Sync Timestamp"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "title": "Featured Listing (Paid)",
+      "default": false
+    },
+    "featured_until": {
+      "type": "string",
+      "format": "date",
+      "title": "Featured Listing Expiry Date"
+    },
+    "price_range": {
+      "type": "string",
+      "enum": [
+        "budget",
+        "moderate",
+        "premium",
+        "luxury"
+      ],
+      "title": "Price Range"
+    },
+    "main_image": {
+      "type": "string",
+      "format": "uri",
+      "title": "Main Image",
+      "ui:widget": "file"
+    }
+  },
+  "required": [
+    "name",
+    "category",
+    "city",
+    "rating",
+    "address",
+    "google_maps_link",
+    "source"
+  ]
+}

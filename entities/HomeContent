@@ -1,0 +1,90 @@
+{
+  "name": "HomeContent",
+  "type": "object",
+  "properties": {
+    "section_key": {
+      "type": "string",
+      "title": "Section Key (unique identifier)"
+    },
+    "section_type": {
+      "type": "string",
+      "enum": [
+        "hero",
+        "banner",
+        "feature_card",
+        "city_pill",
+        "tip_card",
+        "category_card",
+        "cta_button",
+        "custom_html",
+        "image_block",
+        "text_block"
+      ],
+      "title": "Section Type"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title"
+    },
+    "subtitle": {
+      "type": "string",
+      "title": "Subtitle"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description / Body Text"
+    },
+    "button_text": {
+      "type": "string",
+      "title": "Button Label"
+    },
+    "button_link": {
+      "type": "string",
+      "title": "Button Link / URL"
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Image URL"
+    },
+    "icon": {
+      "type": "string",
+      "title": "Icon (emoji or icon name)"
+    },
+    "badge_text": {
+      "type": "string",
+      "title": "Badge / Tag Text"
+    },
+    "color_scheme": {
+      "type": "string",
+      "enum": [
+        "default",
+        "accent",
+        "warning",
+        "success",
+        "danger",
+        "gold",
+        "dark"
+      ],
+      "title": "Color Scheme"
+    },
+    "sort_order": {
+      "type": "integer",
+      "title": "Display Order",
+      "default": 0
+    },
+    "is_active": {
+      "type": "boolean",
+      "title": "Visible on Homepage",
+      "default": true
+    },
+    "extra_json": {
+      "type": "string",
+      "title": "Extra Data (JSON)"
+    }
+  },
+  "required": [
+    "section_key",
+    "section_type",
+    "title"
+  ]
+}
