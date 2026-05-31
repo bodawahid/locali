@@ -14,7 +14,7 @@ SET foreign_key_checks = 0;
 -- Table: restaurant
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `restaurant` (
-  `id` VARCHAR(100) NOT NULL,
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `city` VARCHAR(100) NOT NULL,
   `area` VARCHAR(191) NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `restaurant` (
   `source` VARCHAR(100) NULL,
   `created_date` DATETIME NULL,
   `updated_date` DATETIME NULL,
-  `created_by_id` VARCHAR(100) NULL,
+  `created_by_id` BIGINT UNSIGNED NULL,
   `created_by` VARCHAR(255) NULL,
   `is_sample` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `restaurant` (
 -- Table: cafe
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `cafe` (
-  `id` VARCHAR(100) NOT NULL,
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL,
   `city` VARCHAR(100) NOT NULL,
   `area` VARCHAR(191) NULL,
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `cafe` (
   `source` VARCHAR(100) NULL,
   `created_date` DATETIME NULL,
   `updated_date` DATETIME NULL,
-  `created_by_id` VARCHAR(100) NULL,
+  `created_by_id` BIGINT UNSIGNED NULL,
   `created_by` VARCHAR(255) NULL,
   `is_sample` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
