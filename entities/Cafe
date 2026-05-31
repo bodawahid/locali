@@ -1,0 +1,28 @@
+{
+  "name": "Cafe",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "title": "Name" },
+    "city": { "type": "string", "title": "City" },
+    "area": { "type": "string", "title": "Area" },
+    "description": { "type": "string", "title": "Description" },
+    "address": { "type": "string", "title": "Address" },
+    "phone": { "type": "string", "title": "Phone" },
+    "website": { "type": "string", "title": "Website" },
+    "maps_query": { "type": "string", "title": "Maps Query" },
+    "photos": { "type": "array", "items": { "type": "string" }, "title": "Photos" },
+    "main_image": { "type": "string", "title": "Main Image" },
+    "rating": { "type": "number", "title": "Rating" },
+    "review_count": { "type": "integer", "title": "Review Count" },
+    "price_range": { "type": "string", "title": "Price Range" },
+    "wifi_speed_mbps": { "type": "number", "title": "WiFi Speed (Mbps)" },
+    "has_power_outlets": { "type": "boolean", "title": "Power Outlets" },
+    "is_work_friendly": { "type": "boolean", "title": "Work Friendly" },
+    "status": { "type": "string", "title": "Status" },
+    "is_verified": { "type": "boolean", "title": "Verified" },
+    "is_featured": { "type": "boolean", "title": "Featured" },
+    "source": { "type": "string", "title": "Source" },
+    "created_by_id": { "type": "string", "title": "Created By User ID" }
+  },
+  "required": ["name", "city"]
+}

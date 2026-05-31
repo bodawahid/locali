@@ -1302,3 +1302,76 @@ INSERT INTO `verified_driver` (`whatsapp`, `car_model`, `total_rides`, `language
 INSERT INTO `verified_driver` (`whatsapp`, `car_model`, `total_rides`, `languages`, `car_year`, `main_image`, `price_routes`, `description`, `review_count`, `car_color`, `is_verified`, `full_name`, `cities_covered`, `avg_rating`, `commission_rate`, `photo_url`, `plate_number`, `national_id_last4`, `status`, `id`, `created_date`, `updated_date`, `created_by_id`, `created_by`, `is_sample`) VALUES ('+201098307302', 'Various vehicles', 0, '["English","Arabic"]', NULL, NULL, '[{"price_egp":200,"route":"Airport & private rides","duration_min":30}]', 'Fast response on WhatsApp. Prices vary by distance.', 0, NULL, 1, 'Hurghada Time Tours Taxi', '["hurghada"]', 4.5, 10, NULL, NULL, '0000', 'approved', '69e8be350fefc56ed21cc444', '2026-04-22 12:25:25', '2026-04-22 12:25:25', '69c689e2d4aa000453950c40', 'moa855914@gmail.com', 0);
 INSERT INTO `verified_driver` (`whatsapp`, `car_model`, `total_rides`, `languages`, `car_year`, `main_image`, `price_routes`, `description`, `review_count`, `car_color`, `is_verified`, `full_name`, `cities_covered`, `avg_rating`, `commission_rate`, `photo_url`, `plate_number`, `national_id_last4`, `status`, `id`, `created_date`, `updated_date`, `created_by_id`, `created_by`, `is_sample`) VALUES ('+201010634627', 'Various vehicles', 0, '["English","Arabic"]', NULL, NULL, '[{"price_egp":200,"route":"Airport transfer & intercity rides","duration_min":30}]', 'Professional airport transfer service. Price confirmed on WhatsApp.', 0, NULL, 1, 'Hurghada Transfer Hub', '["hurghada"]', 4.5, 10, NULL, NULL, '0000', 'approved', '69e8be350fefc56ed21cc442', '2026-04-22 12:25:25', '2026-04-22 12:25:25', '69c689e2d4aa000453950c40', 'moa855914@gmail.com', 0);
 INSERT INTO `verified_driver` (`whatsapp`, `car_model`, `total_rides`, `languages`, `car_year`, `main_image`, `price_routes`, `description`, `review_count`, `car_color`, `is_verified`, `full_name`, `cities_covered`, `avg_rating`, `commission_rate`, `photo_url`, `plate_number`, `national_id_last4`, `status`, `id`, `created_date`, `updated_date`, `created_by_id`, `created_by`, `is_sample`) VALUES ('+201118949486', 'Various vehicles', 0, '["English","Arabic"]', NULL, NULL, '[{"price_egp":250,"route":"Airport transfers & tours","duration_min":30}]', 'Reliable service with good reputation.', 0, NULL, 1, 'Hurghada Taxi Transfers', '["hurghada"]', 4.5, 10, NULL, NULL, '0000', 'approved', '69e8be350fefc56ed21cc446', '2026-04-22 12:25:25', '2026-04-22 12:25:25', '69c689e2d4aa000453950c40', 'moa855914@gmail.com', 0);
+
+-- ============================================================
+-- Table: restaurant (added to bridge frontend Restaurants module)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `restaurant` (
+  `id` VARCHAR(100) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(100) NOT NULL,
+  `area` VARCHAR(191) NULL,
+  `cuisine` VARCHAR(191) NULL,
+  `description` TEXT NULL,
+  `address` TEXT NULL,
+  `phone` VARCHAR(80) NULL,
+  `website` TEXT NULL,
+  `maps_query` VARCHAR(255) NULL,
+  `viator_search` VARCHAR(255) NULL,
+  `photos` TEXT NULL,
+  `main_image` TEXT NULL,
+  `rating` DECIMAL(3,2) NULL,
+  `review_count` INT NULL DEFAULT 0,
+  `price_range` VARCHAR(50) NULL,
+  `status` VARCHAR(50) NULL DEFAULT 'pending',
+  `is_verified` TINYINT(1) NULL DEFAULT 0,
+  `is_featured` TINYINT(1) NULL DEFAULT 0,
+  `source` VARCHAR(100) NULL,
+  `created_date` DATETIME NULL,
+  `updated_date` DATETIME NULL,
+  `created_by_id` VARCHAR(100) NULL,
+  `created_by` VARCHAR(255) NULL,
+  `is_sample` TINYINT(1) NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_restaurant_city` (`city`),
+  KEY `idx_restaurant_status` (`status`),
+  KEY `idx_restaurant_featured` (`is_featured`),
+  KEY `idx_restaurant_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================
+-- Table: cafe (added to bridge frontend/admin Cafe module)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS `cafe` (
+  `id` VARCHAR(100) NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `city` VARCHAR(100) NOT NULL,
+  `area` VARCHAR(191) NULL,
+  `description` TEXT NULL,
+  `address` TEXT NULL,
+  `phone` VARCHAR(80) NULL,
+  `website` TEXT NULL,
+  `maps_query` VARCHAR(255) NULL,
+  `photos` TEXT NULL,
+  `main_image` TEXT NULL,
+  `rating` DECIMAL(3,2) NULL,
+  `review_count` INT NULL DEFAULT 0,
+  `price_range` VARCHAR(50) NULL,
+  `wifi_speed_mbps` DECIMAL(8,2) NULL,
+  `has_power_outlets` TINYINT(1) NULL DEFAULT 0,
+  `is_work_friendly` TINYINT(1) NULL DEFAULT 0,
+  `status` VARCHAR(50) NULL DEFAULT 'pending',
+  `is_verified` TINYINT(1) NULL DEFAULT 0,
+  `is_featured` TINYINT(1) NULL DEFAULT 0,
+  `source` VARCHAR(100) NULL,
+  `created_date` DATETIME NULL,
+  `updated_date` DATETIME NULL,
+  `created_by_id` VARCHAR(100) NULL,
+  `created_by` VARCHAR(255) NULL,
+  `is_sample` TINYINT(1) NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `idx_cafe_city` (`city`),
+  KEY `idx_cafe_work_friendly` (`is_work_friendly`),
+  KEY `idx_cafe_status` (`status`),
+  KEY `idx_cafe_created_by_id` (`created_by_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

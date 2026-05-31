@@ -54,6 +54,18 @@ function toSnakeCase($input)
     return implode('_', $ret);
 }
 
+function pluralizeTableName($table)
+{
+    if ($table === '') return $table;
+    if (preg_match('/[^aeiou]y$/', $table)) {
+        return substr($table, 0, -1) . 'ies';
+    }
+    if (substr($table, -1) === 's') {
+        return $table;
+    }
+    return $table . 's';
+}
+
 function inferBindType($columnType)
 {
     $columnType = strtolower((string)$columnType);
@@ -88,6 +100,13 @@ $tables_query = $conn->query("SHOW TABLES");
 if ($tables_query) {
     while ($row = $tables_query->fetch_array()) {
         $actual_tables[] = $row[0];
+    }
+}
+
+if (!in_array($target_table, $actual_tables, true)) {
+    $plural_target = pluralizeTableName($target_table);
+    if (in_array($plural_target, $actual_tables, true)) {
+        $target_table = $plural_target;
     }
 }
 

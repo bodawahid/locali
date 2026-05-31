@@ -1,5 +1,5 @@
 -- ============================================================================
--- LOCALI EGYPT - Complete 27-Table MySQL Schema for Local XAMPP Development
+-- LOCALI EGYPT - Complete 29-Table MySQL Schema for Local XAMPP Development
 -- Database: locali_egypt
 -- Created: May 2026
 -- ============================================================================
@@ -40,6 +40,8 @@ DROP TABLE IF EXISTS `guides`;
 DROP TABLE IF EXISTS `currency_rates`;
 DROP TABLE IF EXISTS `boat_trips`;
 DROP TABLE IF EXISTS `apartments`;
+DROP TABLE IF EXISTS `cafes`;
+DROP TABLE IF EXISTS `restaurants`;
 DROP TABLE IF EXISTS `users`;
 
 -- ============================================================================
@@ -761,6 +763,77 @@ CREATE TABLE `verified_drivers` (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_verified_drivers_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
+-- TABLE 28: RESTAURANTS - Dedicated restaurant discovery feed
+-- ============================================================================
+CREATE TABLE `restaurants` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NOT NULL,
+  `city` VARCHAR(191) NOT NULL,
+  `area` VARCHAR(191) DEFAULT NULL,
+  `cuisine` VARCHAR(191) DEFAULT NULL,
+  `description` TEXT DEFAULT NULL,
+  `address` TEXT DEFAULT NULL,
+  `phone` VARCHAR(80) DEFAULT NULL,
+  `website` VARCHAR(511) DEFAULT NULL,
+  `maps_query` VARCHAR(255) DEFAULT NULL,
+  `viator_search` VARCHAR(255) DEFAULT NULL,
+  `photos` JSON DEFAULT NULL,
+  `main_image` VARCHAR(511) DEFAULT NULL,
+  `rating` DECIMAL(8,4) DEFAULT NULL,
+  `review_count` INT DEFAULT 0,
+  `price_range` VARCHAR(50) DEFAULT NULL,
+  `status` VARCHAR(50) DEFAULT 'pending',
+  `is_verified` TINYINT(1) DEFAULT 0,
+  `is_featured` TINYINT(1) DEFAULT 0,
+  `source` VARCHAR(100) DEFAULT NULL,
+  `created_by_id` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_restaurants_city` (`city`),
+  KEY `idx_restaurants_status` (`status`),
+  KEY `idx_restaurants_featured` (`is_featured`),
+  KEY `idx_restaurants_created_by` (`created_by_id`),
+  CONSTRAINT `fk_restaurants_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
+-- TABLE 29: CAFES - Cafe / work-friendly coffee spot directory
+-- ============================================================================
+CREATE TABLE `cafes` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(191) NOT NULL,
+  `city` VARCHAR(191) NOT NULL,
+  `area` VARCHAR(191) DEFAULT NULL,
+  `description` TEXT DEFAULT NULL,
+  `address` TEXT DEFAULT NULL,
+  `phone` VARCHAR(80) DEFAULT NULL,
+  `website` VARCHAR(511) DEFAULT NULL,
+  `maps_query` VARCHAR(255) DEFAULT NULL,
+  `photos` JSON DEFAULT NULL,
+  `main_image` VARCHAR(511) DEFAULT NULL,
+  `rating` DECIMAL(8,4) DEFAULT NULL,
+  `review_count` INT DEFAULT 0,
+  `price_range` VARCHAR(50) DEFAULT NULL,
+  `wifi_speed_mbps` DECIMAL(8,2) DEFAULT NULL,
+  `has_power_outlets` TINYINT(1) DEFAULT 0,
+  `is_work_friendly` TINYINT(1) DEFAULT 0,
+  `status` VARCHAR(50) DEFAULT 'pending',
+  `is_verified` TINYINT(1) DEFAULT 0,
+  `is_featured` TINYINT(1) DEFAULT 0,
+  `source` VARCHAR(100) DEFAULT NULL,
+  `created_by_id` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_cafes_city` (`city`),
+  KEY `idx_cafes_work_friendly` (`is_work_friendly`),
+  KEY `idx_cafes_status` (`status`),
+  KEY `idx_cafes_created_by` (`created_by_id`),
+  CONSTRAINT `fk_cafes_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================

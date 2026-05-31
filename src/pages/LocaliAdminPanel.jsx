@@ -157,7 +157,7 @@ export default function LocaliAdminPanel() {
           
           <button onClick={() => setActiveMenu('cms')}
             className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${activeMenu === 'cms' ? 'bg-gray-900 text-white shadow-sm' : 'text-gray-600 hover:bg-gray-100'}`}>
-            <Database className="w-3.5 h-3.5" /> 27-Table CMS Manager
+            <Database className="w-3.5 h-3.5" /> 29-Table CMS Manager
           </button>
 
           <button onClick={() => setActiveMenu('add-service')}

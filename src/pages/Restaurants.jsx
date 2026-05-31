@@ -1,29 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Search, MapPin, Star } from 'lucide-react';
+import { localApi } from '@/api/localApi';
 import GoogleReviewsButton from '../components/GoogleReviewsButton';
 import SafeNextStep from '../components/SafeNextStep';
 import BookingButtons from '../components/BookingButtons';
 import PlaceDetailModal from '../components/PlaceDetailModal';
-
-// Data sourced from Google Places / TripAdvisor — phone & prices link to verified external sources
-const SAMPLE_RESTAURANTS = {
-  hurghada: [
-    { name: 'Nino\'s Restaurant', photo: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80', cuisine: 'Italian/Seafood', rating: 4.9, reviews: 2697, address: 'Marina, Hurghada', maps_query: 'Ninos+Restaurant+Marina+Hurghada+Egypt', viator_search: 'restaurants+hurghada', desc: '5-star fine dining overlooking marina. Authentic Italian + fresh seafood.' },
-    { name: 'Sofra Restaurant', photo: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80', cuisine: 'Egyptian/Middle Eastern', rating: 4.7, reviews: 1240, address: 'Downtown Hurghada', maps_query: 'Sofra+Restaurant+Hurghada+Egypt', viator_search: 'restaurants+hurghada', desc: 'Traditional Egyptian food. Koshari, ful, falafel. Great value, local crowds.' },
-    { name: 'Sea Breeze Seafood', photo: 'https://images.unsplash.com/photo-1559339352-11d035aa65de?w=600&q=80', cuisine: 'Seafood', rating: 4.6, reviews: 980, address: 'Sigala Beach, Hurghada', maps_query: 'Sea+Breeze+Seafood+Hurghada+Egypt', viator_search: 'restaurants+hurghada', desc: 'Fresh fish daily. Table with sea view. Popular with tourists & locals.' },
-  ],
-  'sharm-el-sheikh': [
-    { name: 'Pasha Restaurant', photo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80', cuisine: 'International/Egyptian', rating: 4.8, reviews: 1850, address: 'Naama Bay, Sharm El Sheikh', maps_query: 'Pasha+Restaurant+Naama+Bay+Sharm', viator_search: 'restaurants+sharm-el-sheikh', desc: 'Rooftop dining, Naama Bay views. Mix of Middle Eastern & international.' },
-    { name: 'Bedouin Restaurant', photo: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80', cuisine: 'Egyptian', rating: 4.5, reviews: 650, address: 'Old Sharm El Sheikh', maps_query: 'Bedouin+Restaurant+Old+Sharm', viator_search: 'restaurants+sharm-el-sheikh', desc: 'Local Egyptian cuisine, street food vibes. Grilled meats, fresh juices.' },
-  ],
-  luxor: [
-    { name: 'Sofra Luxor', photo: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=600&q=80', cuisine: 'Egyptian', rating: 4.7, reviews: 420, address: 'Corniche, Luxor', maps_query: 'Sofra+Restaurant+Luxor+Egypt', viator_search: 'restaurants+luxor', desc: 'Traditional Egyptian. Koshari, liver, mezze. Busy lunch spot.' },
-    { name: 'Sunset Restaurant Luxor', photo: 'https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=600&q=80', cuisine: 'International/Egyptian', rating: 4.6, reviews: 340, address: 'West Bank Corniche, Luxor', maps_query: 'Sunset+Restaurant+West+Bank+Luxor', viator_search: 'restaurants+luxor', desc: 'Nile view, sunset timing crucial. Mix of cuisines. Romantic setting.' },
-  ],
-  aswan: [
-    { name: 'Nubian House Restaurant', photo: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&q=80', cuisine: 'Nubian/Egyptian', rating: 4.8, reviews: 560, address: 'Corniche, Aswan', maps_query: 'Nubian+House+Restaurant+Aswan+Egypt', viator_search: 'restaurants+aswan', desc: 'Authentic Nubian dishes. River view. Family-run since 1995.' },
-  ],
-};
 
 const PRICE_REFERENCE = [
   { category: 'Budget Street Food', range: '20–50 EGP', examples: 'Koshari, ful, falafel, sandwich' },
@@ -39,6 +20,39 @@ const CITIES = [
   { id: 'luxor', label: '👑 Luxor' },
   { id: 'aswan', label: '🏛️ Aswan' },
 ];
+
+function pickFirstPhoto(photos) {
+  if (Array.isArray(photos) && photos.length) return photos[0];
+  if (typeof photos === 'string' && photos.trim()) {
+    try {
+      const parsed = JSON.parse(photos);
+      return Array.isArray(parsed) && parsed.length ? parsed[0] : null;
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+function normalizeRestaurant(raw) {
+  const photo = raw.main_image || raw.photo || raw.photo_url || pickFirstPhoto(raw.photos);
+  const mapsQuery = raw.maps_query
+    || `${raw.name || ''} ${raw.address || ''} ${raw.city || ''} Egypt`.trim().replace(/\s+/g, '+');
+
+  return {
+    id: raw.id,
+    name: raw.name || 'Unnamed restaurant',
+    photo,
+    cuisine: raw.cuisine || 'Mixed cuisine',
+    rating: Number(raw.rating ?? raw.avg_rating ?? 0),
+    reviews: Number(raw.reviews ?? raw.review_count ?? 0),
+    address: raw.address || 'Address unavailable',
+    maps_query: mapsQuery,
+    viator_search: raw.viator_search || (raw.city ? `restaurants+${raw.city}` : 'restaurants+egypt'),
+    desc: raw.description || raw.desc || 'Description will be updated soon.',
+    city: raw.city || '',
+  };
+}
 
 function RestaurantCard({ r }) {
   const [open, setOpen] = useState(false);
@@ -56,7 +70,7 @@ function RestaurantCard({ r }) {
           </a>
         </div>
         <div className="text-right">
-          <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /><span className="text-xs font-bold">{r.rating}</span></div>
+          <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /><span className="text-xs font-bold">{r.rating > 0 ? r.rating.toFixed(1) : 'N/A'}</span></div>
           <p className="text-[10px] text-gray-400">{r.reviews} reviews</p>
         </div>
       </div>
@@ -78,9 +92,31 @@ function RestaurantCard({ r }) {
 export default function Restaurants() {
   const [city, setCity] = useState('');
   const [search, setSearch] = useState('');
+  const [restaurants, setRestaurants] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const restaurants = city ? SAMPLE_RESTAURANTS[city] || [] : Object.values(SAMPLE_RESTAURANTS).flat();
-  const filtered = restaurants.filter(r => !search || r.name.toLowerCase().includes(search.toLowerCase()));
+  useEffect(() => {
+    let mounted = true;
+
+    const loadRestaurants = async () => {
+      setLoading(true);
+      const rows = city
+        ? await localApi.entities.Restaurant.filter({ city }, '-updated_date', 400, 1)
+        : await localApi.entities.Restaurant.list('-updated_date', 400, 1);
+
+      if (!mounted) return;
+      setRestaurants((rows || []).map(normalizeRestaurant));
+      setLoading(false);
+    };
+
+    loadRestaurants();
+    return () => { mounted = false; };
+  }, [city]);
+
+  const filtered = useMemo(
+    () => restaurants.filter((r) => !search || r.name.toLowerCase().includes(search.toLowerCase())),
+    [restaurants, search]
+  );
 
   return (
     <div className="px-4 py-8 max-w-4xl mx-auto">
@@ -116,7 +152,11 @@ export default function Restaurants() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4 mb-10">
-        {filtered.map((r, i) => <RestaurantCard key={i} r={r} />)}
+        {loading && <div className="text-sm text-gray-500">Loading restaurants...</div>}
+        {!loading && filtered.length === 0 && (
+          <div className="text-sm text-gray-500">No restaurants found yet for this filter.</div>
+        )}
+        {!loading && filtered.map((r) => <RestaurantCard key={r.id || r.name} r={r} />)}
       </div>
 
       <SafeNextStep title="Street Food & Markets" description="Budget eats and where locals eat" to="/bazaars" />
