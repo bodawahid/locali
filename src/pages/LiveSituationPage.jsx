@@ -96,8 +96,8 @@ export default function LiveSituationPage() {
     queryKey: ['live-situation'],
     queryFn: async () => {
       try {
-        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}?entity=live_situation&page=1&limit=200`;
-        const response = await fetch(apiUrl, { cache: 'no-store' });
+        const apiUrl = `${import.meta.env.VITE_API_BASE_URL}?entity=live_situation&page=1&limit=20`;
+        const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Failed to load live situation data');
         const rows = await response.json();
         const safeRows = Array.isArray(rows) ? rows : [];
