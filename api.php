@@ -49,9 +49,28 @@ function toSnakeCase($input)
     preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
     $ret = $matches[0];
     foreach ($ret as &$match) {
-        $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+        $match = $match === strtoupper($match) ? strtolower($match) : lcfirst($match);
     }
     return implode('_', $ret);
+}
+
+function inferBindType($columnType)
+{
+    $columnType = strtolower((string)$columnType);
+    if (preg_match('/int|bit/', $columnType)) return 'i';
+    if (preg_match('/decimal|float|double|real/', $columnType)) return 'd';
+    return 's';
+}
+
+function normalizeColumnValue($value, $bindType)
+{
+    if (is_array($value)) {
+        return json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
+    if ($bindType === 'i') return (int)$value;
+    if ($bindType === 'd') return (float)$value;
+    if (is_bool($value)) return $value ? '1' : '0';
+    return (string)$value;
 }
 
 $entity = isset($_GET['entity']) ? trim($_GET['entity']) : '';
@@ -125,16 +144,14 @@ if ($method === 'GET') {
         $order_by = " ORDER BY `id_index` DESC";
     }
 
-    $page = max(0, (int)($_GET['page'] ?? 0));
+    $page = max(1, (int)($_GET['page'] ?? 1));
     $limit = max(0, (int)($_GET['limit'] ?? 0));
     $max_limit = 200;
     if ($limit > $max_limit) $limit = $max_limit;
     $pagination = '';
-    if ($page > 0 && $limit > 0) {
+    if ($limit > 0) {
         $offset = ($page - 1) * $limit;
         $pagination = " LIMIT $limit OFFSET $offset";
-    } elseif ($limit > 0) {
-        $pagination = " LIMIT $limit";
     }
 
     $sql = "SELECT * FROM `$target_table`";
@@ -208,8 +225,9 @@ if ($method === 'POST') {
             if (!array_key_exists($key, $columns)) continue;
             if ($key === $id_column) continue;
             $set_parts[] = "`$key` = ?";
-            $params[] = is_array($val) ? json_encode($val, JSON_UNESCAPED_UNICODE) : (string)$val;
-            $types .= 's';
+            $bindType = inferBindType($columns[$key]['Type'] ?? '');
+            $params[] = normalizeColumnValue($val, $bindType);
+            $types .= $bindType;
         }
 
         if (empty($set_parts)) respond(["error" => "No valid fields provided for update"], 400);
@@ -262,8 +280,9 @@ if ($method === 'POST') {
         if ($primary_key && $key === $primary_key) continue;
         $fields[] = "`$key`";
         $placeholders[] = "?";
-        $params[] = is_array($val) ? json_encode($val, JSON_UNESCAPED_UNICODE) : (string)$val;
-        $types .= 's';
+        $bindType = inferBindType($columns[$key]['Type'] ?? '');
+        $params[] = normalizeColumnValue($val, $bindType);
+        $types .= $bindType;
     }
 
     if (empty($fields)) {
