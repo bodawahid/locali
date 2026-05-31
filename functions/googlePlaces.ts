@@ -3,6 +3,8 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 const API_KEY = Deno.env.get('GOOGLE_PLACES_API_KEY');
 const BASE = 'https://maps.googleapis.com/maps/api/place';
 const PAGE_SIZE_MAX = 20;
+const MAX_TOKEN_RETRY_ATTEMPTS = 4;
+const TOKEN_RETRY_DELAYS_MS = [500, 1000, 2000];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -34,14 +36,20 @@ Deno.serve(async (req) => {
           ? `${BASE}/textsearch/json?pagetoken=${encodeURIComponent(nextPageToken || '')}&key=${API_KEY}`
           : `${BASE}/textsearch/json?query=${encodeURIComponent(query + ' Egypt')}&key=${API_KEY}`;
 
-        let attempts = useToken ? 4 : 1;
+        // Google Places may return INVALID_REQUEST briefly before next_page_token becomes usable.
+        let attempts = useToken ? MAX_TOKEN_RETRY_ATTEMPTS : 1;
         while (attempts > 0) {
           const res = await fetch(requestUrl);
           currentData = await res.json();
 
           if (!useToken || currentData.status !== 'INVALID_REQUEST') break;
           attempts -= 1;
-          if (attempts > 0) await sleep(2000);
+          // Google recommends a short wait before retrying token-based pagination requests.
+          if (attempts > 0) {
+            const delayIndex = Math.max(0, MAX_TOKEN_RETRY_ATTEMPTS - attempts - 1);
+            const delay = TOKEN_RETRY_DELAYS_MS[Math.min(delayIndex, TOKEN_RETRY_DELAYS_MS.length - 1)];
+            await sleep(delay);
+          }
         }
 
         if (!currentData || (currentData.status !== 'OK' && currentData.status !== 'ZERO_RESULTS')) {

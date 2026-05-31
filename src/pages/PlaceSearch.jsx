@@ -10,6 +10,8 @@ const TYPE_ICONS = {
   museum: '🏛️', spa: '💆', gym: '🏋️', cafe: '☕',
   bar: '🍸', night_club: '🎵', shopping_mall: '🛍️',
 };
+const PLACE_SEARCH_PAGE_SIZE = 8;
+const INFINITE_ROOT_MARGIN = '0px 0px 300px 0px';
 
 function getIcon(types = []) {
   for (const t of types) {
@@ -188,7 +190,7 @@ export default function PlaceSearch() {
         action: 'search',
         query: searchValue,
         page,
-        limit: 8,
+        limit: PLACE_SEARCH_PAGE_SIZE,
       });
 
       if (latestRequestRef.current !== requestId) return;
@@ -196,7 +198,7 @@ export default function PlaceSearch() {
       const incoming = Array.isArray(res.data?.results) ? res.data.results : [];
       const hasMore = typeof res.data?.hasMore === 'boolean'
         ? res.data.hasMore
-        : incoming.length >= 8;
+        : incoming.length === PLACE_SEARCH_PAGE_SIZE;
 
       setSuggestions((prev) => {
         if (!append) return incoming;
@@ -275,7 +277,7 @@ export default function PlaceSearch() {
         if (!entries[0]?.isIntersecting) return;
         fetchSuggestionsPage(query, suggestionPage + 1, true);
       },
-      { root: null, rootMargin: '0px 0px 200px 0px', threshold: 0.1 }
+      { root: null, rootMargin: INFINITE_ROOT_MARGIN }
     );
     observerRef.current.observe(sentinelRef.current);
 
@@ -337,20 +339,18 @@ export default function PlaceSearch() {
                   <ChevronRight className="w-4 h-4 text-gray-300 shrink-0" />
                 </button>
               ))}
-              {(loadingMore || hasMoreSuggestions || !hasMoreSuggestions) && (
-                <div ref={sentinelRef} className="py-3 border-t border-gray-50">
-                  {loadingMore ? (
-                    <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      Loading more places...
-                    </div>
-                  ) : hasMoreSuggestions ? (
-                    <p className="text-center text-[11px] text-gray-400">Scroll for more results</p>
-                  ) : (
-                    <p className="text-center text-[11px] text-gray-400">No more places found</p>
-                  )}
-                </div>
-              )}
+              <div ref={sentinelRef} className="py-3 border-t border-gray-50">
+                {loadingMore ? (
+                  <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Loading more places...
+                  </div>
+                ) : hasMoreSuggestions ? (
+                  <p className="text-center text-[11px] text-gray-400">Scroll for more results</p>
+                ) : (
+                  <p className="text-center text-[11px] text-gray-400">No more places found</p>
+                )}
+              </div>
             </div>
           )}
         </div>

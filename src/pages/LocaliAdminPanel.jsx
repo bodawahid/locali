@@ -23,19 +23,20 @@ import AdminLocalPersonas from './AdminLocalPersonas';
 import AdminHomeCMS from './AdminHomeCMS';
 
 const CATEGORY_ICONS = { hotel: '🏨', apartment: '🏠', experience: '🎯', service: '🛎️' };
+const ADMIN_PLACES_PAGE_SIZE = 24;
 
 export default function LocaliAdminPanel() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   
-  // تتبع الموديول النشط حالياً في الجنب اليمين
+  // Track the currently active right-side module
   const [activeMenu, setActiveMenu] = useState('dashboard'); 
   const [tab, setTab] = useState('pending');
   const [acting, setActing] = useState(null);
   const loadMoreRef = useRef(null);
 
-  // جلب البيانات الأساسية للوحة القيادة
+  // Fetch base dashboard data
   const {
     data,
     isLoading,
@@ -43,10 +44,10 @@ export default function LocaliAdminPanel() {
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['admin-places-infinite'],
-    queryFn: ({ pageParam = 1 }) => localApi.entities.Place.list('-created_date', 24, pageParam),
+    queryKey: ['admin-places'],
+    queryFn: ({ pageParam = 1 }) => localApi.entities.Place.list('-created_date', ADMIN_PLACES_PAGE_SIZE, pageParam),
     getNextPageParam: (lastPage, allPages) => (
-      Array.isArray(lastPage) && lastPage.length === 24 ? allPages.length + 1 : undefined
+      Array.isArray(lastPage) && lastPage.length === ADMIN_PLACES_PAGE_SIZE ? allPages.length + 1 : undefined
     ),
     enabled: user?.role === 'admin',
     staleTime: 30000,
@@ -54,6 +55,7 @@ export default function LocaliAdminPanel() {
   const places = useMemo(() => data?.pages?.flat() ?? [], [data]);
 
   useEffect(() => {
+    // Dashboard-only infinite loading: other admin modules do not render the places list.
     if (activeMenu !== 'dashboard') return;
     const node = loadMoreRef.current;
     if (!node || !hasNextPage || isFetchingNextPage || isLoading) return;
@@ -89,14 +91,14 @@ export default function LocaliAdminPanel() {
   const updateStatus = async (id, status) => {
     setActing(id);
     await localApi.entities.Place.update(id, { status });
-    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
+    queryClient.invalidateQueries({ queryKey: ['admin-places'] });
     setActing(null);
   };
 
   const toggleFeatured = async (place) => {
     setActing(place.id);
     await localApi.entities.Place.update(place.id, { is_featured: !place.is_featured });
-    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
+    queryClient.invalidateQueries({ queryKey: ['admin-places'] });
     setActing(null);
   };
 
@@ -104,7 +106,7 @@ export default function LocaliAdminPanel() {
     if (!confirm('Delete this listing permanently?')) return;
     setActing(id);
     await localApi.entities.Place.delete(id);
-    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
+    queryClient.invalidateQueries({ queryKey: ['admin-places'] });
     setActing(null);
   };
 

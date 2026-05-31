@@ -267,7 +267,7 @@ export default function Services() {
     return sortServices(result);
   }, [services, selectedCity, selectedCategory, search, verifiedOnly]);
 
-  // 4. مراقبة نهاية القائمة بالـ IntersectionObserver
+  // 4. Observe list end via IntersectionObserver
   useEffect(() => {
     const node = loadMoreRef.current;
     if (!node || !hasNextPage || isFetchingNextPage) return;

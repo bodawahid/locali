@@ -8,6 +8,8 @@ import SearchFilters from '../components/locali/SearchFilters';
 import PlaceForm from '../components/locali/PlaceForm';
 import { useAuth } from '@/lib/AuthContext';
 
+const PLACES_PAGE_SIZE = 24;
+
 export default function LocaliHome() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -23,11 +25,11 @@ export default function LocaliHome() {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery({
-    queryKey: ['places-approved-infinite'],
+    queryKey: ['places-approved'],
     queryFn: ({ pageParam = 1 }) =>
-      localApi.entities.Place.filter({ status: 'approved' }, '-created_date', 24, pageParam),
+      localApi.entities.Place.filter({ status: 'approved' }, '-created_date', PLACES_PAGE_SIZE, pageParam),
     getNextPageParam: (lastPage, allPages) => (
-      Array.isArray(lastPage) && lastPage.length === 24 ? allPages.length + 1 : undefined
+      Array.isArray(lastPage) && lastPage.length === PLACES_PAGE_SIZE ? allPages.length + 1 : undefined
     ),
     staleTime: 60000,
   });
@@ -234,7 +236,7 @@ export default function LocaliHome() {
           hostName={user?.full_name}
           onSave={() => {
             setShowForm(false);
-            queryClient.invalidateQueries({ queryKey: ['places-approved-infinite'] });
+            queryClient.invalidateQueries({ queryKey: ['places-approved'] });
           }}
           onClose={() => setShowForm(false)}
         />

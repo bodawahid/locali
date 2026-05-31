@@ -13,6 +13,7 @@ const STATUS_BADGES = {
 };
 
 const CATEGORY_ICONS = { hotel: '🏨', apartment: '🏠', experience: '🎯', service: '🛎️' };
+const HOST_PLACES_PAGE_SIZE = 24;
 
 export default function LocaliHostDashboard() {
   const { user } = useAuth();
@@ -31,10 +32,10 @@ export default function LocaliHostDashboard() {
   } = useInfiniteQuery({
     queryKey: ['host-places', user?.email],
     queryFn: ({ pageParam = 1 }) => user?.role === 'admin'
-      ? localApi.entities.Place.list('-created_date', 24, pageParam)
-      : localApi.entities.Place.filter({ host_email: user?.email }, '-created_date', 24, pageParam),
+      ? localApi.entities.Place.list('-created_date', HOST_PLACES_PAGE_SIZE, pageParam)
+      : localApi.entities.Place.filter({ host_email: user?.email }, '-created_date', HOST_PLACES_PAGE_SIZE, pageParam),
     getNextPageParam: (lastPage, allPages) => (
-      Array.isArray(lastPage) && lastPage.length === 24 ? allPages.length + 1 : undefined
+      Array.isArray(lastPage) && lastPage.length === HOST_PLACES_PAGE_SIZE ? allPages.length + 1 : undefined
     ),
     enabled: !!user,
   });
