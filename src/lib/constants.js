@@ -1,8 +1,8 @@
 export const CITIES = [
-  { id: 'sharm-el-sheikh', name: 'Sharm El Sheikh', nameRu: 'Шарм-эш-Шейх', nameDe: 'Scharm asch-Schaich', nameFr: 'Charm el-Cheikh', nameIt: 'Sharm el-Sheikh', nameEs: 'Sharm el-Sheij', nameZh: '沙姆沙伊赫', image: 'https://media.localApi.com/images/public/69c689e2d4aa000453950c3f/720515fcf_generated_cfe87f7e.png', region: 'Red Sea' },
-  { id: 'hurghada', name: 'Hurghada', nameRu: 'Хургада', nameDe: 'Hurghada', nameFr: 'Hurghada', nameIt: 'Hurghada', nameEs: 'Hurghada', nameZh: '赫尔格达', image: 'https://media.localApi.com/images/public/69c689e2d4aa000453950c3f/790e4e258_generated_70147618.png', region: 'Red Sea' },
-  { id: 'luxor', name: 'Luxor', nameRu: 'Луксор', nameDe: 'Luxor', nameFr: 'Louxor', nameIt: 'Luxor', nameEs: 'Luxor', nameZh: '卢克索', image: 'https://media.localApi.com/images/public/69c689e2d4aa000453950c3f/810e2218d_generated_2acd98c5.png', region: 'Cultural' },
-  { id: 'aswan', name: 'Aswan', nameRu: 'Асуан', nameDe: 'Assuan', nameFr: 'Assouan', nameIt: 'Assuan', nameEs: 'Asuán', nameZh: '阿斯旺', image: 'https://media.localApi.com/images/public/69c689e2d4aa000453950c3f/7a020f162_generated_873418ba.png', region: 'Cultural' },
+  { id: 'sharm-el-sheikh', name: 'Sharm El Sheikh', nameRu: 'Шарм-эш-Шейх', nameDe: 'Scharm asch-Schaich', nameFr: 'Charm el-Cheikh', nameIt: 'Sharm el-Sheikh', nameEs: 'Sharm el-Sheij', nameZh: '沙姆沙伊赫', image: 'https://media.base44.com/images/public/69c689e2d4aa000453950c3f/720515fcf_generated_cfe87f7e.png', region: 'Red Sea' },
+  { id: 'hurghada', name: 'Hurghada', nameRu: 'Хургада', nameDe: 'Hurghada', nameFr: 'Hurghada', nameIt: 'Hurghada', nameEs: 'Hurghada', nameZh: '赫尔格达', image: 'https://media.base44.com/images/public/69c689e2d4aa000453950c3f/790e4e258_generated_70147618.png', region: 'Red Sea' },
+  { id: 'luxor', name: 'Luxor', nameRu: 'Луксор', nameDe: 'Luxor', nameFr: 'Louxor', nameIt: 'Luxor', nameEs: 'Luxor', nameZh: '卢克索', image: 'https://media.base44.com/images/public/69c689e2d4aa000453950c3f/810e2218d_generated_2acd98c5.png', region: 'Cultural' },
+  { id: 'aswan', name: 'Aswan', nameRu: 'Асуан', nameDe: 'Assuan', nameFr: 'Assouan', nameIt: 'Assuan', nameEs: 'Asuán', nameZh: '阿斯旺', image: 'https://media.base44.com/images/public/69c689e2d4aa000453950c3f/7a020f162_generated_873418ba.png', region: 'Cultural' },
   { id: 'el-gouna', name: 'El Gouna', nameRu: 'Эль-Гуна', nameDe: 'El Gouna', nameFr: 'El Gouna', nameIt: 'El Gouna', nameEs: 'El Gouna', nameZh: '古纳', image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&q=80', region: 'Red Sea' },
 ];
 
