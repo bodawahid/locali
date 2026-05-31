@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, ArrowLeft, MessageSquare, Clock, CheckCircle, XCircle } from 'lucide-react';
@@ -13,6 +13,7 @@ const STATUS_BADGES = {
 };
 
 const CATEGORY_ICONS = { hotel: '🏨', apartment: '🏠', experience: '🎯', service: '🛎️' };
+const HOST_PLACES_PAGE_SIZE = 24;
 
 export default function LocaliHostDashboard() {
   const { user } = useAuth();
@@ -20,24 +21,48 @@ export default function LocaliHostDashboard() {
   const [editing, setEditing] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [deleting, setDeleting] = useState(null);
+  const loadMoreRef = useRef(null);
 
-  const { data: myPlaces = [], isLoading, refetch } = useQuery({
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
     queryKey: ['host-places', user?.email],
-    queryFn: () => user?.role === 'admin'
-      ? localApi.entities.Place.list('-created_date', 200)
-      : localApi.entities.Place.filter({ host_email: user?.email }, '-created_date', 100),
+    queryFn: ({ pageParam = 1 }) => user?.role === 'admin'
+      ? localApi.entities.Place.list('-created_date', HOST_PLACES_PAGE_SIZE, pageParam)
+      : localApi.entities.Place.filter({ host_email: user?.email }, '-created_date', HOST_PLACES_PAGE_SIZE, pageParam),
+    getNextPageParam: (lastPage, allPages) => (
+      Array.isArray(lastPage) && lastPage.length === HOST_PLACES_PAGE_SIZE ? allPages.length + 1 : undefined
+    ),
     enabled: !!user,
   });
+  const myPlaces = useMemo(() => data?.pages?.flat() ?? [], [data]);
+
+  useEffect(() => {
+    const node = loadMoreRef.current;
+    if (!node || !hasNextPage || isFetchingNextPage || isLoading) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) fetchNextPage();
+      },
+      { rootMargin: '0px 0px 240px 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage, isLoading]);
 
   const handleDelete = async (id) => {
     await localApi.entities.Place.delete(id);
     setDeleting(null);
-    refetch();
+    qc.invalidateQueries({ queryKey: ['host-places', user?.email] });
   };
 
   const toggleAvailability = async (place) => {
     await localApi.entities.Place.update(place.id, { is_available: !place.is_available });
-    refetch();
+    qc.invalidateQueries({ queryKey: ['host-places', user?.email] });
   };
 
   const stats = {
@@ -191,6 +216,15 @@ export default function LocaliHostDashboard() {
                 </div>
               );
             })}
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-6">
+                <Loader2 className="w-5 h-5 text-rose-400 animate-spin" />
+              </div>
+            )}
+            {!isFetchingNextPage && !hasNextPage && myPlaces.length > 0 && (
+              <p className="text-center text-xs text-gray-400 py-4">No more listings</p>
+            )}
+            <div ref={loadMoreRef} className="h-1" />
           </div>
         )}
       </div>
@@ -201,7 +235,11 @@ export default function LocaliHostDashboard() {
           place={editing || null}
           hostEmail={user?.email}
           hostName={user?.full_name}
-          onSave={() => { setShowForm(false); setEditing(null); refetch(); }}
+          onSave={() => {
+            setShowForm(false);
+            setEditing(null);
+            qc.invalidateQueries({ queryKey: ['host-places', user?.email] });
+          }}
           onClose={() => { setShowForm(false); setEditing(null); }}
         />
       )}

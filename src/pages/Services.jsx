@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { CITIES, SERVICE_CATEGORIES, t, getCityName } from '../lib/constants';
+import { CITIES } from '../lib/constants';
 import { Search, SlidersHorizontal, Plus, Wrench, Loader2, CheckCircle } from 'lucide-react';
 import ServiceCard from '../components/ServiceCard';
 import AdminServiceForm from '../components/AdminServiceForm';
@@ -209,6 +209,7 @@ export default function Services() {
   const [verifiedOnly, setVerifiedOnly] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+  const loadMoreRef = useRef(null);
 
   const isAdmin = user?.role === 'admin';
 
@@ -266,19 +267,19 @@ export default function Services() {
     return sortServices(result);
   }, [services, selectedCity, selectedCategory, search, verifiedOnly]);
 
-  // 4. مراقبة حركة السكرول التلقائي النظيف
+  // 4. Observe list end via IntersectionObserver
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 300 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        fetchNextPage();
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const node = loadMoreRef.current;
+    if (!node || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) fetchNextPage();
+      },
+      { rootMargin: '0px 0px 300px 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
@@ -408,6 +409,10 @@ export default function Services() {
                 <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
               </div>
             )}
+            {!isFetchingNextPage && !hasNextPage && filtered.length > 0 && (
+              <p className="text-center text-xs text-gray-400 mt-4">No more data to load</p>
+            )}
+            <div ref={loadMoreRef} className="h-1" />
           </>
         ) : (
           <EmptyState
