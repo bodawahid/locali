@@ -1,17 +1,24 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowedOriginsEnv = getenv('ALLOWED_ORIGINS') ?: 'http://localhost:5173,http://127.0.0.1:5173';
+$allowedOrigins = array_values(array_filter(array_map('trim', explode(',', $allowedOriginsEnv))));
+$defaultOrigin = $allowedOrigins[0] ?? 'http://localhost:5173';
+$allowOrigin = in_array($origin, $allowedOrigins, true) ? $origin : $defaultOrigin;
+
+header("Access-Control-Allow-Origin: " . $allowOrigin);
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Content-Type: application/json; charset=UTF-8");
+header("Vary: Origin");
 
 if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     exit(0);
 }
 
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "locali_egypt";
+$host = getenv('DB_HOST') ?: "localhost";
+$user = getenv('DB_USER') ?: "root";
+$password = getenv('DB_PASSWORD') ?: "";
+$database = getenv('DB_NAME') ?: "locali_egypt";
 
 $conn = new mysqli($host, $user, $password, $database);
 if ($conn->connect_error) {
@@ -51,6 +58,9 @@ $entity = isset($_GET['entity']) ? trim($_GET['entity']) : '';
 if ($entity === '') {
     respond(["error" => "Please specify an entity (e.g., ?entity=Service)"], 400);
 }
+if (!preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $entity)) {
+    respond(["error" => "Invalid entity format"], 400);
+}
 
 $target_table = toSnakeCase($entity);
 
@@ -84,7 +94,7 @@ if ($columns_query) {
 
 if (!$primary_key) {
     if (isset($columns['id'])) $primary_key = 'id';
-    else if (isset($columns['id_index'])) $primary_key = 'id_index';
+    elseif (isset($columns['id_index'])) $primary_key = 'id_index';
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
@@ -117,6 +127,8 @@ if ($method === 'GET') {
 
     $page = max(0, (int)($_GET['page'] ?? 0));
     $limit = max(0, (int)($_GET['limit'] ?? 0));
+    $max_limit = 200;
+    if ($limit > $max_limit) $limit = $max_limit;
     $pagination = '';
     if ($page > 0 && $limit > 0) {
         $offset = ($page - 1) * $limit;
