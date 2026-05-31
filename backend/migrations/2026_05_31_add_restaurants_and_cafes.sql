@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `restaurant` (
   KEY `idx_restaurant_status` (`status`),
   KEY `idx_restaurant_featured` (`is_featured`),
   KEY `idx_restaurant_created_by_id` (`created_by_id`),
-  CONSTRAINT `fk_restaurant_created_by_user` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `fk_restaurant_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `cafe` (
   KEY `idx_cafe_work_friendly` (`is_work_friendly`),
   KEY `idx_cafe_status` (`status`),
   KEY `idx_cafe_created_by_id` (`created_by_id`),
-  CONSTRAINT `fk_cafe_created_by_user` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  CONSTRAINT `fk_cafe_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET foreign_key_checks = 1;
