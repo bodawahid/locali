@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS `guides`;
 DROP TABLE IF EXISTS `currency_rates`;
 DROP TABLE IF EXISTS `boat_trips`;
 DROP TABLE IF EXISTS `apartments`;
-DROP TABLE IF EXISTS `cafes`;
-DROP TABLE IF EXISTS `restaurants`;
+DROP TABLE IF EXISTS `cafe`;
+DROP TABLE IF EXISTS `restaurant`;
 DROP TABLE IF EXISTS `users`;
 
 -- ============================================================================
@@ -766,9 +766,9 @@ CREATE TABLE `verified_drivers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================
--- TABLE 28: RESTAURANTS - Dedicated restaurant discovery feed
+-- TABLE 28: RESTAURANT - Dedicated restaurant discovery feed
 -- ============================================================================
-CREATE TABLE `restaurants` (
+CREATE TABLE `restaurant` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(191) NOT NULL,
   `city` VARCHAR(191) NOT NULL,
@@ -782,7 +782,7 @@ CREATE TABLE `restaurants` (
   `viator_search` VARCHAR(255) DEFAULT NULL,
   `photos` JSON DEFAULT NULL,
   `main_image` VARCHAR(511) DEFAULT NULL,
-  `rating` DECIMAL(8,4) DEFAULT NULL,
+  `rating` DECIMAL(3,2) DEFAULT NULL,
   `review_count` INT DEFAULT 0,
   `price_range` VARCHAR(50) DEFAULT NULL,
   `status` VARCHAR(50) DEFAULT 'pending',
@@ -793,17 +793,17 @@ CREATE TABLE `restaurants` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idx_restaurants_city` (`city`),
-  KEY `idx_restaurants_status` (`status`),
-  KEY `idx_restaurants_featured` (`is_featured`),
-  KEY `idx_restaurants_created_by` (`created_by_id`),
-  CONSTRAINT `fk_restaurants_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `idx_restaurant_city` (`city`),
+  KEY `idx_restaurant_status` (`status`),
+  KEY `idx_restaurant_featured` (`is_featured`),
+  KEY `idx_restaurant_created_by` (`created_by_id`),
+  CONSTRAINT `fk_restaurant_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================
--- TABLE 29: CAFES - Cafe / work-friendly coffee spot directory
+-- TABLE 29: CAFE - Cafe / work-friendly coffee spot directory
 -- ============================================================================
-CREATE TABLE `cafes` (
+CREATE TABLE `cafe` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(191) NOT NULL,
   `city` VARCHAR(191) NOT NULL,
@@ -815,7 +815,7 @@ CREATE TABLE `cafes` (
   `maps_query` VARCHAR(255) DEFAULT NULL,
   `photos` JSON DEFAULT NULL,
   `main_image` VARCHAR(511) DEFAULT NULL,
-  `rating` DECIMAL(8,4) DEFAULT NULL,
+  `rating` DECIMAL(3,2) DEFAULT NULL,
   `review_count` INT DEFAULT 0,
   `price_range` VARCHAR(50) DEFAULT NULL,
   `wifi_speed_mbps` DECIMAL(8,2) DEFAULT NULL,
@@ -829,11 +829,11 @@ CREATE TABLE `cafes` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  KEY `idx_cafes_city` (`city`),
-  KEY `idx_cafes_work_friendly` (`is_work_friendly`),
-  KEY `idx_cafes_status` (`status`),
-  KEY `idx_cafes_created_by` (`created_by_id`),
-  CONSTRAINT `fk_cafes_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+  KEY `idx_cafe_city` (`city`),
+  KEY `idx_cafe_work_friendly` (`is_work_friendly`),
+  KEY `idx_cafe_status` (`status`),
+  KEY `idx_cafe_created_by` (`created_by_id`),
+  CONSTRAINT `fk_cafe_created_by` FOREIGN KEY (`created_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ============================================================================

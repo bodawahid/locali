@@ -101,8 +101,8 @@ export default function Restaurants() {
     const loadRestaurants = async () => {
       setLoading(true);
       const rows = city
-        ? await localApi.entities.Restaurant.filter({ city }, '-updated_date', 400, 1)
-        : await localApi.entities.Restaurant.list('-updated_date', 400, 1);
+        ? await localApi.entities.Restaurant.filter({ city }, '-updated_date', 150, 1)
+        : await localApi.entities.Restaurant.list('-updated_date', 150, 1);
 
       if (!mounted) return;
       setRestaurants((rows || []).map(normalizeRestaurant));
