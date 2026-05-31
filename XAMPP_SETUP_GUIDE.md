@@ -23,7 +23,7 @@ Your Locali Egypt application now uses **100% local architecture**:
 - **Features**: CORS enabled, JWT auth, PDO database connection, complete REST endpoints
 
 ### 3. **Frontend Updates**
-- `src/api/base44Client.js` - Updated to point to local PHP API
+- `src/api/localApi.js` - Updated to point to local PHP API
 - `src/lib/AuthContext.jsx` - Fixed authentication context with proper state management
 - `src/components/ProtectedRoute.jsx` - Fixed authentication guard
 - `src/components/AdminProtectedRoute.jsx` - Fixed admin guard
@@ -302,7 +302,7 @@ curl -X POST http://localhost/locali-api/api.php/scam-reports \
 ┌─────────────────────────────────────────────────────┐
 │          React/Vite Frontend (Port 5173)           │
 │  ├─ src/lib/AuthContext.jsx (Auth state)          │
-│  ├─ src/api/base44Client.js (HTTP client)         │
+│  ├─ src/api/localApi.js (HTTP client)             │
 │  ├─ src/components/ProtectedRoute.jsx (Guards)    │
 │  └─ src/pages/LoginPage.jsx (Login UI)            │
 └──────────────────────┬──────────────────────────────┘
@@ -336,7 +336,7 @@ curl -X POST http://localhost/locali-api/api.php/scam-reports \
 
 1. ✅ **Database**: Import `locali_xampp_setup.sql`
 2. ✅ **API**: Copy `xampp_api_setup.php` → `C:\xampp\htdocs\locali-api\api.php`
-3. ✅ **Frontend**: Already updated (AuthContext, base44Client, guards)
+3. ✅ **Frontend**: Already updated (AuthContext, localApi, guards)
 4. **Test**: Run `npm run dev` and login with `admin@locali.eg` / `admin`
 5. **Develop**: Add more features, entities, and admin pages
 6. **Deploy**: When ready, upload to production

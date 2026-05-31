@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 // Static fallback content when DB has nothing
 const FALLBACK = {
@@ -30,14 +30,14 @@ export default function useHomeContent() {
   useEffect(() => {
     let unsub;
     const init = async () => {
-      const data = await base44.entities.HomeContent.list('sort_order', 500);
+      const data = await localApi.entities.HomeContent.list('sort_order', 500);
       setSections(data);
       setLoading(false);
     };
     init();
 
     // Real-time subscription
-    unsub = base44.entities.HomeContent.subscribe((event) => {
+    unsub = localApi.entities.HomeContent.subscribe((event) => {
       setSections(prev => {
         if (event.type === 'create') return [...prev, event.data].sort((a, b) => (a.sort_order||0) - (b.sort_order||0));
         if (event.type === 'update') return prev.map(s => s.id === event.id ? event.data : s).sort((a, b) => (a.sort_order||0) - (b.sort_order||0));

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Zap, CheckCircle2, XCircle, Loader2, Play, RefreshCw } from 'lucide-react';
@@ -14,7 +14,7 @@ const SERVICE_CATEGORIES = ['restaurant', 'medical', 'transport', 'activities', 
 const LISTING_CATEGORIES = ['hotel', 'restaurant', 'tour', 'activity', 'attraction'];
 
 async function generatePriceGuideEntries(city, category) {
-  const res = await base44.integrations.Core.InvokeLLM({
+  const res = await localApi.integrations.Core.InvokeLLM({
     prompt: `Generate 25 realistic price guide entries for tourists in ${city}, Egypt for the category "${category}".
     
     Return a JSON array of objects. Each object must have:
@@ -52,7 +52,7 @@ async function generatePriceGuideEntries(city, category) {
 }
 
 async function generateServiceEntries(city, category) {
-  const res = await base44.integrations.Core.InvokeLLM({
+  const res = await localApi.integrations.Core.InvokeLLM({
     prompt: `Generate 20 realistic service/business listings for tourists in ${city}, Egypt for category "${category}".
     
     Return JSON with an "entries" array. Each entry:
@@ -100,7 +100,7 @@ async function generateServiceEntries(city, category) {
 }
 
 async function generateListingEntries(city, category) {
-  const res = await base44.integrations.Core.InvokeLLM({
+  const res = await localApi.integrations.Core.InvokeLLM({
     prompt: `Generate 15 realistic listing entries for ${category}s in ${city}, Egypt for a tourist guide platform.
     
     Return JSON with an "entries" array. Each entry:
@@ -190,12 +190,12 @@ export default function AdminBulkPopulate() {
 
     if (entries.length > 0) {
       // Deduplicate against existing by name/item
-      const existing = await base44.entities[task.entity].filter({ city: task.city, category: task.category }, 'created_date', 200);
+      const existing = await localApi.entities[task.entity].filter({ city: task.city, category: task.category }, 'created_date', 200);
       const existingNames = new Set(existing.map(e => (e.name || e.item || '').toLowerCase()));
       const fresh = entries.filter(e => !existingNames.has((e.name || e.item || '').toLowerCase()));
       
       if (fresh.length > 0) {
-        await base44.entities[task.entity].bulkCreate(fresh);
+        await localApi.entities[task.entity].bulkCreate(fresh);
         setTotalAdded(prev => prev + fresh.length);
         setStatus(task.id, { state: 'done', count: fresh.length });
       } else {

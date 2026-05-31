@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Star, Send } from 'lucide-react';
 
 const FALLBACK_REVIEWS = [
@@ -40,7 +40,7 @@ export default function ReviewSection({ entityId, city }) {
 
   const { data: reviews = [] } = useQuery({
     queryKey: ['reviews', entityId],
-    queryFn: () => base44.entities.Review.filter({ service_id: entityId }, '-created_date', 50),
+    queryFn: () => localApi.entities.Review.filter({ service_id: entityId }, '-created_date', 50),
     enabled: !!entityId,
   });
 
@@ -52,7 +52,7 @@ export default function ReviewSection({ entityId, city }) {
     e.preventDefault();
     if (!rating || !comment.trim()) return;
     setSubmitting(true);
-    await base44.entities.Review.create({
+    await localApi.entities.Review.create({
       service_id: entityId,
       rating,
       comment: comment.trim(),

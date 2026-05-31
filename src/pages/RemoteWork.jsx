@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import { CITIES } from '../lib/constants';
 import SafeNextStep from '../components/SafeNextStep';
@@ -56,7 +56,7 @@ export default function RemoteWork() {
 
   const { data: dbSpots = [] } = useQuery({
     queryKey: ['remote-work', city],
-    queryFn: () => base44.entities.RemoteWorkSpot.filter({ city }, '-created_date', 20),
+    queryFn: () => localApi.entities.RemoteWorkSpot.filter({ city }, '-created_date', 20),
   });
 
   const staticSpots = STATIC_SPOTS[city] || [];

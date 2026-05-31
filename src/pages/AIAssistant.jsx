@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Send, Bot, Sparkles, MapPin, Phone, Star } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -85,14 +85,14 @@ export default function AIAssistant() {
   }, [messages]);
 
   const initConversation = async () => {
-    const conv = await base44.agents.createConversation({
+    const conv = await localApi.agents.createConversation({
       agent_name: 'egypt_guide',
       metadata: { name: 'Localli Guide Session' },
     });
     setConversation(conv);
     setInitializing(false);
 
-    base44.agents.subscribeToConversation(conv.id, (data) => {
+    localApi.agents.subscribeToConversation(conv.id, (data) => {
       setMessages(data.messages || []);
       if (data.messages?.length > 0) {
         const last = data.messages[data.messages.length - 1];
@@ -106,7 +106,7 @@ export default function AIAssistant() {
     if (!msg || !conversation || loading) return;
     setInput('');
     setLoading(true);
-    await base44.agents.addMessage(conversation, { role: 'user', content: msg });
+    await localApi.agents.addMessage(conversation, { role: 'user', content: msg });
   };
 
   const handleKey = (e) => {

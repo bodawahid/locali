@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ImageUpload from '../components/ImageUpload';
 import EditableImage from '../components/EditableImage';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQuery } from '@tanstack/react-query';
 import { Anchor, Clock, Users, Plus, X, ChevronDown, ChevronUp, Navigation, DollarSign } from 'lucide-react';
 
@@ -264,7 +264,7 @@ function SubmitForm({ onClose }) {
   const submit = async () => {
     if (!form.boat_name || !form.city || !form.boat_type || !form.whatsapp) return;
     setLoading(true);
-    await base44.entities.BoatTrip.create({
+    await localApi.entities.BoatTrip.create({
       ...form,
       price: parseFloat(form.price) || 0,
       capacity: parseInt(form.capacity) || 0,
@@ -339,7 +339,7 @@ export default function BoatTrips() {
   // Also load any DB-submitted boats that got approved
   const { data: dbBoats = [] } = useQuery({
     queryKey: ['boattrips'],
-    queryFn: () => base44.entities.BoatTrip.filter({ status: 'approved' }),
+    queryFn: () => localApi.entities.BoatTrip.filter({ status: 'approved' }),
   });
 
   const filtered = EXPERIENCE_CATALOG.filter(exp => {

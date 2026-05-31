@@ -1,6 +1,6 @@
 import { useParams, useOutletContext, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { CITIES, t, getCityName } from '../lib/constants';
 import { CITY_META } from '../lib/cityContent';
 import { MapPin, ArrowLeft, AlertTriangle, DollarSign, ShieldCheck, Star, UtensilsCrossed, Car, CreditCard, Shield, Map } from 'lucide-react';
@@ -24,12 +24,12 @@ export default function CityPage() {
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ['services', cityId],
-    queryFn: () => base44.entities.Service.filter({ city: cityId }, '-created_date', 20),
+    queryFn: () => localApi.entities.Service.filter({ city: cityId }, '-created_date', 20),
   });
 
   const { data: scamReports = [] } = useQuery({
     queryKey: ['scams', cityId],
-    queryFn: () => base44.entities.ScamReport.filter({ city: cityId }, '-created_date', 5),
+    queryFn: () => localApi.entities.ScamReport.filter({ city: cityId }, '-created_date', 5),
   });
 
   if (!city) return <div className="p-4 text-center">City not found</div>;

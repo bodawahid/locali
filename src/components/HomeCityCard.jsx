@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Pencil, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/AuthContext';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 const ACCEPTED = ['image/jpeg', 'image/png', 'image/webp'];
 const MAX_MB = 5;
@@ -31,7 +31,7 @@ export default function HomeCityCard({ city }) {
       return;
     }
 
-    base44.entities.HomeContent.filter({ section_key: sectionKey }, '-created_date', 1)
+    localApi.entities.HomeContent.filter({ section_key: sectionKey }, '-created_date', 1)
       .then(results => {
         if (results && results.length > 0 && results[0].image_url) {
           cityImageCache[city.id] = { imageUrl: results[0].image_url, recordId: results[0].id };
@@ -47,16 +47,16 @@ export default function HomeCityCard({ city }) {
     if (!ACCEPTED.includes(file.type) || file.size > MAX_MB * 1024 * 1024) return;
     setLoading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await localApi.integrations.Core.UploadFile({ file });
       setImg(file_url);
 
       const sectionKey = `city_card_${city.id}`;
       if (recordId) {
         // Update existing record
-        await base44.entities.HomeContent.update(recordId, { image_url: file_url });
+        await localApi.entities.HomeContent.update(recordId, { image_url: file_url });
       } else {
         // Create new record
-        const created = await base44.entities.HomeContent.create({
+        const created = await localApi.entities.HomeContent.create({
           section_key: sectionKey,
           section_type: 'city_pill',
           title: city.label,

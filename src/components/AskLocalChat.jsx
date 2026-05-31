@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Send, ShieldCheck, AlertCircle, Clock } from 'lucide-react';
 
 const QUICK_QUESTIONS = [
@@ -20,7 +20,7 @@ export default function AskLocalChat({ local, nationality, flag, onClose }) {
     // Load this session's questions stored in localStorage
     const ids = JSON.parse(localStorage.getItem('locali_q_ids') || '[]');
     if (!ids.length) return;
-    const all = await base44.entities.LocalQuestion.list('-created_date', 50);
+    const all = await localApi.entities.LocalQuestion.list('-created_date', 50);
     const mine = all.filter(q => ids.includes(q.id));
     setQuestions(mine);
   };
@@ -38,7 +38,7 @@ export default function AskLocalChat({ local, nationality, flag, onClose }) {
   const sendQuestion = async (text) => {
     if (!text.trim() || submitting) return;
     setSubmitting(true);
-    const record = await base44.entities.LocalQuestion.create({
+    const record = await localApi.entities.LocalQuestion.create({
       question_text: text,
       user_nationality: nationality,
       user_flag: flag,

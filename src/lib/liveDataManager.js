@@ -1,4 +1,4 @@
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 // Live Data Manager — handles real-time data with caching and fallbacks
 // Ensures all displayed data is current and properly timestamped
@@ -30,7 +30,7 @@ class LiveDataManager {
 
     try {
       // Fetch latest rates from database (updated by automation)
-      const rates = await base44.entities.CurrencyRate.list('-created_date', 1);
+      const rates = await localApi.entities.CurrencyRate.list('-created_date', 1);
       
       if (rates.length === 0) {
         console.warn('No currency rates found in database');
@@ -91,7 +91,7 @@ class LiveDataManager {
     }
 
     try {
-      const services = await base44.entities.Service.filter({
+      const services = await localApi.entities.Service.filter({
         name: serviceName,
         city: city,
       }, '-updated_date', 1);
@@ -130,7 +130,7 @@ class LiveDataManager {
     }
 
     try {
-      const situations = await base44.entities.LiveSituation.filter({
+      const situations = await localApi.entities.LiveSituation.filter({
         city: city,
       }, '-update_date', 1);
 

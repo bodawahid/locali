@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Upload, X, Image, Loader2, Plus } from 'lucide-react';
 
 const MAX_SIZE_MB = 5;
@@ -31,7 +31,7 @@ export default function MultiImageUpload({ value = [], onChange, maxImages = 10 
 
     setLoading(true);
     const urls = await Promise.all(
-      toUpload.map(file => base44.integrations.Core.UploadFile({ file }).then(r => r.file_url))
+      toUpload.map(file => localApi.integrations.Core.UploadFile({ file }).then(r => r.file_url))
     );
     onChange([...value, ...urls]);
     setLoading(false);

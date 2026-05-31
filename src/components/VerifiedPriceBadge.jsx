@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { ShieldCheck, AlertTriangle, TrendingUp } from 'lucide-react';
 import LiveTrustBadge from './LiveTrustBadge';
 
@@ -10,7 +10,7 @@ import LiveTrustBadge from './LiveTrustBadge';
 export default function VerifiedPriceBadge({ category, city, titleMatch, className = '' }) {
   const { data: entries = [] } = useQuery({
     queryKey: ['priceEntries', category, city],
-    queryFn: () => base44.entities.PriceEntry.filter(
+    queryFn: () => localApi.entities.PriceEntry.filter(
       { category, city, is_active: true },
       '-last_verified_date',
       10

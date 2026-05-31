@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import ImageUpload from '../components/ImageUpload';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQuery } from '@tanstack/react-query';
 import { Search, X, Plus, Clock, Star } from 'lucide-react';
 import GoogleReviewsButton from '../components/GoogleReviewsButton';
@@ -101,7 +101,7 @@ function ExperienceCard({ exp }) {
 
   useEffect(() => {
     const query = exp.imageQuery || exp.title;
-    base44.functions.invoke('fetchFreeImages', { placeName: query, maxImages: 1 })
+    localApi.functions.invoke('fetchFreeImages', { placeName: query, maxImages: 1 })
       .then(res => {
         const imgs = res?.data?.images || [];
         if (imgs.length > 0) setPhoto(imgs[0].url);
@@ -169,7 +169,7 @@ function SubmitForm({ onClose }) {
   const submit = async () => {
     if (!form.title || !form.city || !form.experience_type || !form.price || !form.whatsapp) return;
     setLoading(true);
-    await base44.entities.HorseRiding.create({ ...form, price: parseFloat(form.price), status: 'pending' });
+    await localApi.entities.HorseRiding.create({ ...form, price: parseFloat(form.price), status: 'pending' });
     setLoading(false);
     setDone(true);
   };
@@ -242,7 +242,7 @@ export default function HorseRidingExperiences() {
 
   const { data: dbExps = [] } = useQuery({
     queryKey: ['horseriding'],
-    queryFn: () => base44.entities.HorseRiding.filter({ status: 'approved' }),
+    queryFn: () => localApi.entities.HorseRiding.filter({ status: 'approved' }),
   });
 
   const experiences = dbExps.length > 0 ? dbExps : SAMPLE_HORSES;

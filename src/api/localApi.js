@@ -271,7 +271,7 @@ const agents = {
   },
 };
 
-export const base44 = {
+export const localApi = {
   entities: new Proxy({}, {
     get(_, name) {
       return makeEntity(name.toString());

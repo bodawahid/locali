@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Image, Play, CheckCircle, XCircle, Loader2, RefreshCw, Shield, AlertTriangle, ToggleLeft, ToggleRight, Clock, Zap } from 'lucide-react';
 
 const ENTITY_OPTIONS = [
@@ -42,7 +42,7 @@ export default function AdminAutoImages() {
     setRunning(true);
     setResult(null);
     try {
-      const res = await base44.functions.invoke('smartAutoImages', {
+      const res = await localApi.functions.invoke('smartAutoImages', {
         entities: selectedEntities,
         limit,
       });

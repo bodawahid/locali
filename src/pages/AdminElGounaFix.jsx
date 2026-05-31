@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Trash2, Zap, CheckCircle2, XCircle, Loader2, Play, AlertTriangle } from 'lucide-react';
@@ -67,7 +67,7 @@ Return JSON with "entries" array. Each entry:
 Include mix of budget guesthouses to luxury resorts. Return ONLY valid JSON.`;
   }
 
-  const res = await base44.integrations.Core.InvokeLLM({
+  const res = await localApi.integrations.Core.InvokeLLM({
     prompt,
     response_json_schema: {
       type: 'object',
@@ -118,9 +118,9 @@ export default function AdminElGounaFix() {
       let deleted = 0;
       let batch;
       do {
-        batch = await base44.entities[entity].filter({ city: 'cairo' }, 'created_date', 100);
+        batch = await localApi.entities[entity].filter({ city: 'cairo' }, 'created_date', 100);
         for (const record of batch) {
-          await base44.entities[entity].delete(record.id);
+          await localApi.entities[entity].delete(record.id);
           deleted++;
         }
       } while (batch.length === 100);
@@ -142,12 +142,12 @@ export default function AdminElGounaFix() {
         const entries = await generateElGounaEntries(task.entity, task.category);
 
         if (entries.length > 0) {
-          const existing = await base44.entities[task.entity].filter({ city: 'el-gouna', category: task.category }, 'created_date', 200);
+          const existing = await localApi.entities[task.entity].filter({ city: 'el-gouna', category: task.category }, 'created_date', 200);
           const existingNames = new Set(existing.map(e => (e.name || e.item || '').toLowerCase()));
           const fresh = entries.filter(e => !existingNames.has((e.name || e.item || '').toLowerCase()));
 
           if (fresh.length > 0) {
-            await base44.entities[task.entity].bulkCreate(fresh);
+            await localApi.entities[task.entity].bulkCreate(fresh);
             added += fresh.length;
             setTotalAdded(prev => prev + fresh.length);
             setTaskStatus(task.id, { state: 'done', count: fresh.length });

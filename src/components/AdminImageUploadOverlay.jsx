@@ -11,7 +11,7 @@
  *   className    — extra classes on wrapper
  */
 import { useRef, useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { Pencil, Loader2 } from 'lucide-react';
 
@@ -39,9 +39,9 @@ export default function AdminImageUploadOverlay({
     if (!ACCEPTED.includes(file.type) || file.size > MAX_MB * 1024 * 1024) return;
     setLoading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await localApi.integrations.Core.UploadFile({ file });
       if (entityName && recordId) {
-        await base44.entities[entityName].update(recordId, { [fieldName]: file_url });
+        await localApi.entities[entityName].update(recordId, { [fieldName]: file_url });
       }
       onUploaded?.(file_url);
     } finally {

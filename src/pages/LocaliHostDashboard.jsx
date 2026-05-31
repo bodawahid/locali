@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
 import { Plus, Pencil, Trash2, Eye, EyeOff, Loader2, ArrowLeft, MessageSquare, Clock, CheckCircle, XCircle } from 'lucide-react';
 import PlaceForm from '../components/locali/PlaceForm';
@@ -24,19 +24,19 @@ export default function LocaliHostDashboard() {
   const { data: myPlaces = [], isLoading, refetch } = useQuery({
     queryKey: ['host-places', user?.email],
     queryFn: () => user?.role === 'admin'
-      ? base44.entities.Place.list('-created_date', 200)
-      : base44.entities.Place.filter({ host_email: user?.email }, '-created_date', 100),
+      ? localApi.entities.Place.list('-created_date', 200)
+      : localApi.entities.Place.filter({ host_email: user?.email }, '-created_date', 100),
     enabled: !!user,
   });
 
   const handleDelete = async (id) => {
-    await base44.entities.Place.delete(id);
+    await localApi.entities.Place.delete(id);
     setDeleting(null);
     refetch();
   };
 
   const toggleAvailability = async (place) => {
-    await base44.entities.Place.update(place.id, { is_available: !place.is_available });
+    await localApi.entities.Place.update(place.id, { is_available: !place.is_available });
     refetch();
   };
 

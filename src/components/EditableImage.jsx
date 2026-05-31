@@ -11,7 +11,7 @@
  *   ...rest       — any other img props
  */
 import { useRef, useState, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { Pencil, Loader2 } from 'lucide-react';
 
@@ -48,7 +48,7 @@ export default function EditableImage({
       return;
     }
 
-    base44.entities.HomeContent.filter({ section_key: sectionKey }, '-created_date', 1)
+    localApi.entities.HomeContent.filter({ section_key: sectionKey }, '-created_date', 1)
       .then(results => {
         if (results && results.length > 0 && results[0].image_url) {
           imageCache[sectionKey] = { url: results[0].image_url, id: results[0].id };
@@ -64,16 +64,16 @@ export default function EditableImage({
     if (!ACCEPTED.includes(file.type) || file.size > MAX_MB * 1024 * 1024) return;
     setLoading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await localApi.integrations.Core.UploadFile({ file });
       setSrc(file_url);
       onUploaded?.(file_url);
 
       if (sectionKey) {
         if (recordId) {
-          await base44.entities.HomeContent.update(recordId, { image_url: file_url });
+          await localApi.entities.HomeContent.update(recordId, { image_url: file_url });
           imageCache[sectionKey] = { url: file_url, id: recordId };
         } else {
-          const created = await base44.entities.HomeContent.create({
+          const created = await localApi.entities.HomeContent.create({
             section_key: sectionKey,
             section_type: 'image_block',
             title: sectionKey,

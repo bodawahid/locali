@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import { CITIES } from '../lib/constants';
 import { useAuth } from '@/lib/AuthContext';
@@ -849,7 +849,7 @@ export default function LongStay() {
 
   const { data: dbServices = [], refetch } = useQuery({
     queryKey: ['long-stay', city],
-    queryFn: () => base44.entities.LongStayService.filter({ city }, '-created_date', 30),
+    queryFn: () => localApi.entities.LongStayService.filter({ city }, '-created_date', 30),
   });
 
   const staticServices = STATIC_SERVICES[city] || [];

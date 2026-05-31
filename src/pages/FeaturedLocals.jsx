@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import SafeNextStep from '../components/SafeNextStep';
 import { Users, Star, Shield, Globe } from 'lucide-react';
@@ -208,7 +208,7 @@ export default function FeaturedLocals() {
       const filter = { is_active: true };
       if (selectedCity) filter.city = selectedCity;
       if (selectedType) filter.service_type = selectedType;
-      return base44.entities.LocalContact.filter(filter, '-avg_rating', 50);
+      return localApi.entities.LocalContact.filter(filter, '-avg_rating', 50);
     },
   });
 

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Upload, X, Image, Loader2 } from 'lucide-react';
 
 const MAX_SIZE_MB = 5;
@@ -31,7 +31,7 @@ export default function ImageUpload({ value, onChange, label = 'Upload Image', c
     }
     setLoading(true);
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await localApi.integrations.Core.UploadFile({ file });
       onChange(file_url);
     } catch (err) {
       setError('Upload failed. Please check your connection and try again.');

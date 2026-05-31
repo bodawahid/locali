@@ -2,13 +2,13 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Plane, ArrowRight, DollarSign } from 'lucide-react';
 import { useLiveRates } from '../hooks/useLiveRates';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 const FALLBACK_SUMMARY = 'Tourist areas operating normally. Flights running on schedule. No alerts affecting Sharm El Sheikh, Hurghada, Luxor or Aswan.';
 
 export default function LiveSituationBanner() {
   const { data: records = [] } = useQuery({
     queryKey: ['live-situation-banner'],
-    queryFn: () => base44.entities.LiveSituation.list('-update_date', 10),
+    queryFn: () => localApi.entities.LiveSituation.list('-update_date', 10),
     staleTime: 1000 * 60 * 30,
   });
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/AuthContext';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQuery } from '@tanstack/react-query';
 import { RefreshCw, Check, AlertCircle, Loader2, Image, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ export default function AdminPlaceImageUpdater() {
 
   const { data: services = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-services-images', selectedCategory],
-    queryFn: () => base44.entities.Service.filter({ category: selectedCategory }, '-created_date', 50),
+    queryFn: () => localApi.entities.Service.filter({ category: selectedCategory }, '-created_date', 50),
   });
 
   if (!user || user.role !== 'admin') {
@@ -37,7 +37,7 @@ export default function AdminPlaceImageUpdater() {
     setUpdating(prev => ({ ...prev, [service.id]: true }));
     setResults(prev => ({ ...prev, [service.id]: null }));
 
-    const res = await base44.functions.invoke('fetchPlaceImages', {
+    const res = await localApi.functions.invoke('fetchPlaceImages', {
       placeName: service.name,
       city: service.city,
       maxPhotos: 3,
@@ -47,7 +47,7 @@ export default function AdminPlaceImageUpdater() {
 
     if (data.found && data.mainPhoto) {
       // Update the service record with new image
-      await base44.entities.Service.update(service.id, {
+      await localApi.entities.Service.update(service.id, {
         main_image: data.mainPhoto,
         photos: data.photos || [],
         ...(data.rating && !service.avg_rating ? { avg_rating: data.rating } : {}),

@@ -2,7 +2,7 @@
  * AdminRemoteWorkForm — Admin-only add/edit modal for RemoteWorkSpot entity.
  */
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { X, Loader2 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
@@ -30,9 +30,9 @@ export default function AdminRemoteWorkForm({ onSave, onClose, record }) {
       price_per_day: parseFloat(form.price_per_day) || 0,
     };
     if (record?.id) {
-      await base44.entities.RemoteWorkSpot.update(record.id, data);
+      await localApi.entities.RemoteWorkSpot.update(record.id, data);
     } else {
-      await base44.entities.RemoteWorkSpot.create(data);
+      await localApi.entities.RemoteWorkSpot.create(data);
     }
     setSaving(false);
     onSave();

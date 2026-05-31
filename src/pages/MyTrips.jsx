@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Sparkles, Trash2, MapPin, Calendar, DollarSign, Users, Copy, Check, Plus } from 'lucide-react';
@@ -72,9 +72,9 @@ export default function MyTrips() {
   const [authChecked, setAuthChecked] = useState(false);
 
   useState(() => {
-    base44.auth.isAuthenticated().then(async (authed) => {
+    localApi.auth.isAuthenticated().then(async (authed) => {
       if (authed) {
-        const me = await base44.auth.me();
+        const me = await localApi.auth.me();
         setUser(me);
       }
       setAuthChecked(true);
@@ -83,12 +83,12 @@ export default function MyTrips() {
 
   const { data: trips = [], isLoading } = useQuery({
     queryKey: ['my-trips', user?.email],
-    queryFn: () => base44.entities.SavedItinerary.filter({ user_email: user.email }, '-created_date'),
+    queryFn: () => localApi.entities.SavedItinerary.filter({ user_email: user.email }, '-created_date'),
     enabled: !!user,
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.SavedItinerary.delete(id),
+    mutationFn: (id) => localApi.entities.SavedItinerary.delete(id),
     onSuccess: () => qc.invalidateQueries(['my-trips']),
   });
 
@@ -109,7 +109,7 @@ export default function MyTrips() {
         <h1 className="text-2xl font-black mb-2">My Saved Trips</h1>
         <p className="text-sm text-muted-foreground mb-6">Sign in to save your AI-generated itineraries and access them from any device.</p>
         <button
-          onClick={() => base44.auth.redirectToLogin(window.location.href)}
+          onClick={() => localApi.auth.redirectToLogin(window.location.href)}
           className="bg-accent text-accent-foreground px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
         >
           Sign In to View Your Trips

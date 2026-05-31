@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import { CITIES } from '../lib/constants';
 import SafeNextStep from '../components/SafeNextStep';
@@ -57,7 +57,7 @@ export default function Nightlife() {
 
   const { data: dbVenues = [] } = useQuery({
     queryKey: ['nightlife', city],
-    queryFn: () => base44.entities.NightlifeVenue.filter({ city }, '-created_date', 30),
+    queryFn: () => localApi.entities.NightlifeVenue.filter({ city }, '-created_date', 30),
   });
 
   const staticVenues = STATIC_VENUES[city] || [];

@@ -7,7 +7,7 @@ import CitySubNav from '../../components/city/CitySubNav';
 import FAQSection from '../../components/city/FAQSection';
 import SafeNextStep from '../../components/SafeNextStep';
 import { AlertTriangle, ShieldCheck, ChevronDown, ChevronUp, Plus } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 const SEVERITY_STYLES = {
   high: { badge: 'bg-red-500 text-white', border: 'border-red-500/30 bg-red-500/5' },
@@ -46,7 +46,7 @@ export default function CityScams() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.ScamReport.create({ ...form, city: cityId, status: 'pending' });
+    await localApi.entities.ScamReport.create({ ...form, city: cityId, status: 'pending' });
     setSubmitting(false);
     setSubmitted(true);
     setShowForm(false);

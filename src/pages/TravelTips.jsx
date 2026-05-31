@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Globe, Shield, Car, HandHeart, DollarSign, Loader2, ChevronDown } from 'lucide-react';
 
 const NATIONALITIES = [
@@ -46,7 +46,7 @@ export default function TravelTips() {
     setError(null);
     setTips(null);
 
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await localApi.integrations.Core.InvokeLLM({
       prompt: `You are an expert travel advisor for Egypt. Generate practical travel tips for a ${nationality} tourist visiting Egypt.
 
 CRITICAL RULES:

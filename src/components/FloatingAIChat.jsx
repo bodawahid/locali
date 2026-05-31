@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import ChatCurrencyTicker from './ChatCurrencyTicker';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Bot, X, Send, Sparkles, Minimize2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -156,7 +156,7 @@ export default function FloatingAIChat({ externalOpen, onExternalOpenHandled }) 
   }, [open]);
 
   const initChat = async () => {
-    const conv = await base44.agents.createConversation({
+    const conv = await localApi.agents.createConversation({
       agent_name: 'egypt_guide',
       metadata: { name: 'Floating Chat' },
     });
@@ -164,7 +164,7 @@ export default function FloatingAIChat({ externalOpen, onExternalOpenHandled }) 
     conversationRef.current = conv;
     setInitialized(true);
 
-    base44.agents.subscribeToConversation(conv.id, (data) => {
+    localApi.agents.subscribeToConversation(conv.id, (data) => {
       const msgs = data.messages || [];
       setMessages(msgs);
       // Resolve loading: stop when last message is assistant with content
@@ -217,7 +217,7 @@ export default function FloatingAIChat({ externalOpen, onExternalOpenHandled }) 
     }, 45000);
 
     try {
-      await base44.agents.addMessage(conv, { role: 'user', content: msg });
+      await localApi.agents.addMessage(conv, { role: 'user', content: msg });
     } catch (err) {
       clearTimeout(timeout);
       console.error('[AI] Send failed:', err);

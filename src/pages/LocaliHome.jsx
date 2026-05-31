@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
 import { Grid3X3, LayoutList, Plus, User, Shield } from 'lucide-react';
 import PlaceCard from '../components/locali/PlaceCard.jsx';
@@ -16,7 +16,7 @@ export default function LocaliHome() {
 
   const { data: places = [], refetch, isLoading } = useQuery({
     queryKey: ['places-approved'],
-    queryFn: () => base44.entities.Place.filter({ status: 'approved' }, '-created_date', 100),
+    queryFn: () => localApi.entities.Place.filter({ status: 'approved' }, '-created_date', 100),
     staleTime: 60000,
   });
 

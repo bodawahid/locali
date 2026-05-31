@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Search, Download, CheckCircle2, Loader2, X, Star, MapPin, Phone, RefreshCw, ShieldCheck } from 'lucide-react';
 
 const CITIES = [
@@ -140,7 +140,7 @@ export default function AdminDataPopulate() {
       }
     };
 
-    const res = await base44.integrations.Core.InvokeLLM({
+    const res = await localApi.integrations.Core.InvokeLLM({
       prompt,
       add_context_from_internet: true,
       response_json_schema: schema,
@@ -195,7 +195,7 @@ export default function AdminDataPopulate() {
         };
       }
       try {
-        await base44.entities[entityName].create(record);
+        await localApi.entities[entityName].create(record);
         saved++;
       } catch (e) {
         addLog(`❌ Failed: ${record.name || record.full_name}`);
