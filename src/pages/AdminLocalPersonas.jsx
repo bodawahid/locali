@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Shield, Send, RefreshCw, Clock, CheckCircle2, User, Loader2 } from 'lucide-react';
@@ -24,7 +24,7 @@ function QuestionCard({ question, onAnswered }) {
   const submit = async () => {
     if (!answer.trim()) return;
     setSaving(true);
-    await base44.entities.LocalQuestion.update(question.id, {
+    await localApi.entities.LocalQuestion.update(question.id, {
       answer_text: answer,
       assigned_persona_id: selectedPersona.id,
       persona_name: selectedPersona.name,
@@ -102,7 +102,7 @@ export default function AdminLocalPersonas() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const all = await base44.entities.LocalQuestion.list('-created_date', 100);
+    const all = await localApi.entities.LocalQuestion.list('-created_date', 100);
     setQuestions(all);
     setLoading(false);
   }, []);

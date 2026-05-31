@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ArrowLeft, CheckCircle, XCircle, Trash2, Star, Loader2, 
@@ -36,7 +36,7 @@ export default function LocaliAdminPanel() {
   // جلب البيانات الأساسية للوحة القيادة
   const { data: places = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-places'],
-    queryFn: () => base44.entities.Place.list('-created_date', 200),
+    queryFn: () => localApi.entities.Place.list('-created_date', 200),
     enabled: user?.role === 'admin',
     staleTime: 30000,
   });
@@ -61,14 +61,14 @@ export default function LocaliAdminPanel() {
 
   const updateStatus = async (id, status) => {
     setActing(id);
-    await base44.entities.Place.update(id, { status });
+    await localApi.entities.Place.update(id, { status });
     refetch();
     setActing(null);
   };
 
   const toggleFeatured = async (place) => {
     setActing(place.id);
-    await base44.entities.Place.update(place.id, { is_featured: !place.is_featured });
+    await localApi.entities.Place.update(place.id, { is_featured: !place.is_featured });
     refetch();
     setActing(null);
   };
@@ -76,7 +76,7 @@ export default function LocaliAdminPanel() {
   const deletePlace = async (id) => {
     if (!confirm('Delete this listing permanently?')) return;
     setActing(id);
-    await base44.entities.Place.delete(id);
+    await localApi.entities.Place.delete(id);
     refetch();
     setActing(null);
   };

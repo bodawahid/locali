@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import {
   Car, ShieldCheck, Star, MapPin, Lock, User, Languages,
   Plus, X, Check, CreditCard, AlertTriangle, Bell, Clock,
@@ -157,7 +157,7 @@ function LiveTrackingScreen({ booking, onComplete }) {
     setMessages(p => [...p, userMsg]);
     setTranslating(true);
     // Auto-translate via AI
-    const res = await base44.integrations.Core.InvokeLLM({
+    const res = await localApi.integrations.Core.InvokeLLM({
       prompt: `Translate this tourist message to Arabic for the driver, then write a natural Arabic driver reply, then translate that reply back to English. 
 Tourist message: "${text}"
 Respond as JSON: {"arabic_message": "...", "driver_reply_arabic": "...", "driver_reply_english": "..."}`,
@@ -637,7 +637,7 @@ function DriverRegisterForm({ onClose }) {
   });
   const queryClient = useQueryClient();
   const create = useMutation({
-    mutationFn: (data) => base44.entities.VerifiedDriver.create({ ...data, status: 'pending', is_verified: false }),
+    mutationFn: (data) => localApi.entities.VerifiedDriver.create({ ...data, status: 'pending', is_verified: false }),
     onSuccess: () => { setSubmitted(true); queryClient.invalidateQueries(['drivers']); },
   });
 
@@ -776,7 +776,7 @@ export default function LocaliRide() {
 
   const { data: dbDrivers = [] } = useQuery({
     queryKey: ['drivers', cityFilter],
-    queryFn: () => base44.entities.VerifiedDriver.filter({ status: 'approved' }),
+    queryFn: () => localApi.entities.VerifiedDriver.filter({ status: 'approved' }),
   });
 
   const allDrivers = [...SAMPLE_DRIVERS, ...dbDrivers];

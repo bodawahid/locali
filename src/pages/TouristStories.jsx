@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import SafeNextStep from '../components/SafeNextStep';
 import { BookOpen, Plus, ThumbsUp, Shield, AlertTriangle, Star, MapPin, Globe, ChevronDown, ChevronUp, CheckCircle2 } from 'lucide-react';
@@ -286,7 +286,7 @@ export default function TouristStories() {
       const filter = {};
       if (selectedCity) filter.city = selectedCity;
       if (selectedType) filter.story_type = selectedType;
-      return base44.entities.TouristStory.filter(filter, '-upvotes', 100);
+      return localApi.entities.TouristStory.filter(filter, '-upvotes', 100);
     },
   });
 
@@ -298,7 +298,7 @@ export default function TouristStories() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.TouristStory.create({ ...form, upvotes: 0, is_verified: false });
+    await localApi.entities.TouristStory.create({ ...form, upvotes: 0, is_verified: false });
     setSubmitting(false);
     setSubmitted(true);
     setShowForm(false);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Loader2, CheckCircle2, AlertCircle, Upload, Trash2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQueryClient } from '@tanstack/react-query';
 
 const CITIES = [
@@ -69,7 +69,7 @@ export default function AddServiceModal({ open, onClose }) {
     setUploadingPhoto(true);
     for (const file of files) {
       try {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const { file_url } = await localApi.integrations.Core.UploadFile({ file });
         setPhotos(p => [...p, { url: file_url }]);
       } catch {
         // skip failed uploads silently
@@ -87,7 +87,7 @@ export default function AddServiceModal({ open, onClose }) {
     setErrorMsg('');
     try {
       const serviceTypeObj = SERVICE_TYPES.find(s => s.label === form.serviceType) || SERVICE_TYPES[SERVICE_TYPES.length - 1];
-      await base44.entities.Service.create({
+      await localApi.entities.Service.create({
         name: form.businessName.trim(),
         category: serviceTypeObj.value,
         city: form.city,

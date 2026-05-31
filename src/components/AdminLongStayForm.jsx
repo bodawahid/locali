@@ -2,7 +2,7 @@
  * AdminLongStayForm — Admin-only add/edit modal for LongStayService entity.
  */
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { X, Loader2 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
@@ -23,9 +23,9 @@ export default function AdminLongStayForm({ onSave, onClose, record }) {
     setSaving(true);
     const data = { ...form };
     if (record?.id) {
-      await base44.entities.LongStayService.update(record.id, data);
+      await localApi.entities.LongStayService.update(record.id, data);
     } else {
-      await base44.entities.LongStayService.create(data);
+      await localApi.entities.LongStayService.create(data);
     }
     setSaving(false);
     onSave();

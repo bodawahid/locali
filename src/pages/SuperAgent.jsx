@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Bot, Send, Plus, Trash2, Zap, FileText, TrendingUp, Settings, ChevronRight, Loader2 } from 'lucide-react';
 import MessageBubble from '../components/MessageBubble';
 
@@ -61,7 +61,7 @@ export default function SuperAgent() {
 
   useEffect(() => {
     if (!activeConv) return;
-    const unsub = base44.agents.subscribeToConversation(activeConv.id, (data) => {
+    const unsub = localApi.agents.subscribeToConversation(activeConv.id, (data) => {
       setMessages(data.messages || []);
     });
     return unsub;
@@ -69,13 +69,13 @@ export default function SuperAgent() {
 
   const loadConversations = async () => {
     setLoadingConvs(true);
-    const convs = await base44.agents.listConversations({ agent_name: 'super_agent' });
+    const convs = await localApi.agents.listConversations({ agent_name: 'super_agent' });
     setConversations(convs || []);
     setLoadingConvs(false);
   };
 
   const createConversation = async (firstMessage = null) => {
-    const conv = await base44.agents.createConversation({
+    const conv = await localApi.agents.createConversation({
       agent_name: 'super_agent',
       metadata: { name: firstMessage ? firstMessage.slice(0, 40) + '…' : 'محادثة جديدة' },
     });
@@ -91,7 +91,7 @@ export default function SuperAgent() {
     if (!text.trim() || !conv) return;
     setSending(true);
     setInput('');
-    await base44.agents.addMessage(conv, { role: 'user', content: text });
+    await localApi.agents.addMessage(conv, { role: 'user', content: text });
     setSending(false);
   };
 

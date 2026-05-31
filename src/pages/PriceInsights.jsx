@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Share2, TrendingUp, CheckCircle2, AlertCircle, Clock, Plus, X, Loader2, Bot } from 'lucide-react';
 import LiveTrustBadge from '../components/LiveTrustBadge';
 
@@ -149,7 +149,7 @@ function SubmitForm({ onClose, onSaved }) {
   const handleSubmit = async () => {
     if (!form.service_name || !form.local_price_min || !form.local_price_max) return;
     setSaving(true);
-    await base44.entities.PriceInsight.create({
+    await localApi.entities.PriceInsight.create({
       ...form,
       reported_tourist_price: form.reported_tourist_price ? +form.reported_tourist_price : null,
       local_price_min: +form.local_price_min,
@@ -227,7 +227,7 @@ function AISummary({ insights }) {
     const items = insights.slice(0, 8).map(i =>
       `${i.service_name} in ${i.city}: local ${i.local_price_min}–${i.local_price_max} EGP${i.reported_tourist_price ? `, tourist reported ${i.reported_tourist_price} EGP` : ''}`
     ).join('\n');
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await localApi.integrations.Core.InvokeLLM({
       prompt: `You are a neutral travel pricing analyst. Summarize the following price insights for Egypt tourists in 3–4 sentences. Be factual, neutral, and helpful. Never use words like "scam" or "rip-off". Frame differences as "price variations" and mention factors like seasonal demand or tourist-area pricing when relevant.\n\nData:\n${items}`,
     });
     setSummary(result);
@@ -268,7 +268,7 @@ export default function PriceInsights() {
       const f = { is_active: true };
       if (filterCity) f.city = filterCity;
       if (filterCat) f.category = filterCat;
-      return base44.entities.PriceInsight.filter(f, '-updated_date', 50);
+      return localApi.entities.PriceInsight.filter(f, '-updated_date', 50);
     },
   });
 

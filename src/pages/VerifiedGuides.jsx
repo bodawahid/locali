@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { ShieldCheck, Star, Languages, MapPin, Plus, X, Check } from 'lucide-react';
 import ImageUpload from '../components/ImageUpload';
 import { useSEO } from '../lib/seo';
@@ -191,7 +191,7 @@ function RegistrationForm({ onClose }) {
   const queryClient = useQueryClient();
 
   const createGuide = useMutation({
-    mutationFn: (data) => base44.entities.Guide.create({ ...data, status: 'pending', is_verified: false }),
+    mutationFn: (data) => localApi.entities.Guide.create({ ...data, status: 'pending', is_verified: false }),
     onSuccess: () => {
       setSubmitted(true);
       queryClient.invalidateQueries(['guides']);
@@ -294,8 +294,8 @@ export default function VerifiedGuides() {
   const { data: dbGuides = [] } = useQuery({
     queryKey: ['guides', cityFilter],
     queryFn: () => cityFilter
-      ? base44.entities.Guide.filter({ city: cityFilter, status: 'approved', is_verified: true })
-      : base44.entities.Guide.filter({ status: 'approved', is_verified: true }),
+      ? localApi.entities.Guide.filter({ city: cityFilter, status: 'approved', is_verified: true })
+      : localApi.entities.Guide.filter({ status: 'approved', is_verified: true }),
   });
 
   const allGuides = [...SAMPLE_GUIDES, ...dbGuides].filter(g => !cityFilter || g.city === cityFilter);

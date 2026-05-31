@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Search, MapPin, Star, Phone, MessageCircle, Globe, Loader2, X } from 'lucide-react';
 import DataTimestamp from '../components/DataTimestamp';
 
@@ -85,7 +85,7 @@ export default function UnifiedSearch() {
 
   const { data: listings = [], isLoading } = useQuery({
     queryKey: ['unified-listings'],
-    queryFn: () => base44.entities.Listing.list('-rating', 500),
+    queryFn: () => localApi.entities.Listing.list('-rating', 500),
   });
 
   const filtered = useMemo(() => {

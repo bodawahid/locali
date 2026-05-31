@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import {
   Bot, Send, RefreshCw, Database, Search, CheckCircle2,
   AlertTriangle, Zap, Globe, TrendingUp, MapPin, Loader2,
@@ -73,16 +73,16 @@ export default function AdminContentManager() {
   // Load stats
   useEffect(() => {
     Promise.all([
-      base44.entities.Service.list('-updated_date', 1),
-      base44.entities.ScamReport.list('-updated_date', 1),
-      base44.entities.PriceGuide.list('-updated_date', 1),
+      localApi.entities.Service.list('-updated_date', 1),
+      localApi.entities.ScamReport.list('-updated_date', 1),
+      localApi.entities.PriceGuide.list('-updated_date', 1),
     ]).then(([s, sc, p]) => {
       // Just trigger to verify entities exist
     }).catch(() => {});
 
-    base44.entities.Service.list('-updated_date', 200).then(s => setStats(prev => ({ ...prev, services: s.length })));
-    base44.entities.ScamReport.list('-updated_date', 100).then(s => setStats(prev => ({ ...prev, scams: s.length })));
-    base44.entities.PriceGuide.list('-updated_date', 200).then(s => setStats(prev => ({ ...prev, prices: s.length })));
+    localApi.entities.Service.list('-updated_date', 200).then(s => setStats(prev => ({ ...prev, services: s.length })));
+    localApi.entities.ScamReport.list('-updated_date', 100).then(s => setStats(prev => ({ ...prev, scams: s.length })));
+    localApi.entities.PriceGuide.list('-updated_date', 200).then(s => setStats(prev => ({ ...prev, prices: s.length })));
   }, []);
 
   useEffect(() => {
@@ -97,18 +97,18 @@ export default function AdminContentManager() {
 
     let conv = conversation;
     if (!conv) {
-      conv = await base44.agents.createConversation({
+      conv = await localApi.agents.createConversation({
         agent_name: 'content_manager',
         metadata: { name: `Content Session ${new Date().toLocaleString()}` },
       });
       setConversation(conv);
     }
 
-    const updated = await base44.agents.addMessage(conv, { role: 'user', content: msg });
+    const updated = await localApi.agents.addMessage(conv, { role: 'user', content: msg });
     setConversation(updated);
 
     // Subscribe to streaming
-    const unsub = base44.agents.subscribeToConversation(updated.id, (data) => {
+    const unsub = localApi.agents.subscribeToConversation(updated.id, (data) => {
       setMessages(data.messages || []);
     });
 
@@ -117,7 +117,7 @@ export default function AdminContentManager() {
     unsub();
 
     // Final fetch
-    const final = await base44.agents.getConversation(updated.id);
+    const final = await localApi.agents.getConversation(updated.id);
     setMessages(final.messages || []);
     setConversation(final);
     setLoading(false);

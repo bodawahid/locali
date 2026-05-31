@@ -86,7 +86,7 @@ const files = [
   'src/main.jsx',
 
   // src/api
-  'src/api/base44Client.js',
+  'src/api/localApi.js',
 
   // src/components/city
   'src/components/city/CityMap.jsx',

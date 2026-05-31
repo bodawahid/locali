@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,9 +64,9 @@ function EditModal({ record, onSave, onClose }) {
   const handleSave = async () => {
     setSaving(true);
     if (record.id) {
-      await base44.entities.HomeContent.update(record.id, form);
+      await localApi.entities.HomeContent.update(record.id, form);
     } else {
-      await base44.entities.HomeContent.create(form);
+      await localApi.entities.HomeContent.create(form);
     }
     onSave();
     setSaving(false);
@@ -253,7 +253,7 @@ export default function AdminHomeCMS() {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const data = await base44.entities.HomeContent.list('sort_order', 500);
+    const data = await localApi.entities.HomeContent.list('sort_order', 500);
     setSections(data);
     setLoading(false);
   }, []);
@@ -263,13 +263,13 @@ export default function AdminHomeCMS() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
   const handleToggle = async (item) => {
-    await base44.entities.HomeContent.update(item.id, { is_active: !item.is_active });
+    await localApi.entities.HomeContent.update(item.id, { is_active: !item.is_active });
     setSections(prev => prev.map(s => s.id === item.id ? { ...s, is_active: !s.is_active } : s));
     showToast(`Section ${!item.is_active ? 'shown' : 'hidden'}`);
   };
 
   const handleDelete = async (id) => {
-    await base44.entities.HomeContent.delete(id);
+    await localApi.entities.HomeContent.delete(id);
     setDeleting(null);
     setSections(prev => prev.filter(s => s.id !== id));
     showToast('Section deleted');
@@ -284,8 +284,8 @@ export default function AdminHomeCMS() {
     const a = sorted[idx], b = sorted[swapIdx];
     const aOrder = a.sort_order || 0, bOrder = b.sort_order || 0;
     await Promise.all([
-      base44.entities.HomeContent.update(a.id, { sort_order: bOrder }),
-      base44.entities.HomeContent.update(b.id, { sort_order: aOrder }),
+      localApi.entities.HomeContent.update(a.id, { sort_order: bOrder }),
+      localApi.entities.HomeContent.update(b.id, { sort_order: aOrder }),
     ]);
     setSections(prev => prev.map(s => {
       if (s.id === a.id) return { ...s, sort_order: bOrder };
@@ -296,7 +296,7 @@ export default function AdminHomeCMS() {
 
   const handleSeedDefaults = async () => {
     setSeeding(true);
-    await Promise.all(DEFAULT_SECTIONS.map(s => base44.entities.HomeContent.create(s)));
+    await Promise.all(DEFAULT_SECTIONS.map(s => localApi.entities.HomeContent.create(s)));
     showToast('Default sections loaded!');
     load();
     setSeeding(false);

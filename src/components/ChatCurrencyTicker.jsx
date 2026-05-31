@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { TrendingUp, RefreshCw } from 'lucide-react';
 
 export default function ChatCurrencyTicker() {
   const { data, isLoading, dataUpdatedAt, refetch } = useQuery({
     queryKey: ['live-currency-ticker'],
     queryFn: async () => {
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await localApi.integrations.Core.InvokeLLM({
         prompt: 'Get the current live exchange rates for Egypt today. Return ONLY JSON with these exact keys: usd_egp, eur_egp, gbp_egp, rub_egp (RUB per 100). Use latest Central Bank of Egypt or XE.com rates.',
         add_context_from_internet: true,
         response_json_schema: {

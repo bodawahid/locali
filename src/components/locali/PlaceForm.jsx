@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { X, Upload, Plus, Loader2, MapPin } from 'lucide-react';
 
 const CITIES = ['hurghada','sharm-el-sheikh','cairo','luxor','aswan','el-gouna','dahab','alexandria'];
@@ -23,7 +23,7 @@ export default function PlaceForm({ place, onSave, onClose, hostEmail, hostName 
     const files = Array.from(e.target.files);
     if (!files.length) return;
     setUploading(true);
-    const urls = await Promise.all(files.map(f => base44.integrations.Core.UploadFile({ file: f }).then(r => r.file_url)));
+    const urls = await Promise.all(files.map(f => localApi.integrations.Core.UploadFile({ file: f }).then(r => r.file_url)));
     const newImages = [...(form.images || []), ...urls];
     set('images', newImages);
     if (!form.main_image) set('main_image', urls[0]);
@@ -44,9 +44,9 @@ export default function PlaceForm({ place, onSave, onClose, hostEmail, hostName 
     setError('');
     const data = { ...form, price: Number(form.price), status: place?.status || 'pending' };
     if (place?.id) {
-      await base44.entities.Place.update(place.id, data);
+      await localApi.entities.Place.update(place.id, data);
     } else {
-      await base44.entities.Place.create(data);
+      await localApi.entities.Place.create(data);
     }
     setSaving(false);
     onSave();

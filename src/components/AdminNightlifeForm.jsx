@@ -2,7 +2,7 @@
  * AdminNightlifeForm — Admin-only add/edit modal for NightlifeVenue entity.
  */
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { X, Loader2 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
@@ -25,9 +25,9 @@ export default function AdminNightlifeForm({ onSave, onClose, record }) {
     setSaving(true);
     const data = { ...form, entry_fee: parseFloat(form.entry_fee) || 0 };
     if (record?.id) {
-      await base44.entities.NightlifeVenue.update(record.id, data);
+      await localApi.entities.NightlifeVenue.update(record.id, data);
     } else {
-      await base44.entities.NightlifeVenue.create(data);
+      await localApi.entities.NightlifeVenue.create(data);
     }
     setSaving(false);
     onSave();

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { ShieldCheck, Star, Languages, MapPin, Clock, Users, DollarSign, Plus, X, Check, AlertTriangle, ChevronRight, Sliders, Building2 } from 'lucide-react';
 import { useSEO } from '../lib/seo';
 import { generateTrackingCode } from '../lib/constants';
@@ -203,7 +203,7 @@ function RegistrationForm({ onClose }) {
   const queryClient = useQueryClient();
 
   const createOp = useMutation({
-    mutationFn: (data) => base44.entities.TourOperator.create({ ...data, status: 'pending', is_verified: false, agreed_to_terms: true }),
+    mutationFn: (data) => localApi.entities.TourOperator.create({ ...data, status: 'pending', is_verified: false, agreed_to_terms: true }),
     onSuccess: () => { setSubmitted(true); queryClient.invalidateQueries(['operators']); },
   });
 
@@ -496,7 +496,7 @@ export default function TourOperators() {
 
   const { data: dbOperators = [] } = useQuery({
     queryKey: ['operators', cityFilter],
-    queryFn: () => base44.entities.TourOperator.filter({ status: 'approved', is_verified: true }),
+    queryFn: () => localApi.entities.TourOperator.filter({ status: 'approved', is_verified: true }),
   });
 
   const allOperators = [...SAMPLE_OPERATORS, ...dbOperators];

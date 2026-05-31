@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { AlertTriangle, Users, Shield, Car, HandHeart, DollarSign, Loader2 } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import SafeNextStep from '../components/SafeNextStep';
 
 // Language map: which native language to use per nationality key
@@ -111,7 +111,7 @@ export default function NationalityGuide() {
     }
     setLoading(true);
     const lang = LANG_MAP[nat] || 'English';
-    const result = await base44.integrations.Core.InvokeLLM({
+    const result = await localApi.integrations.Core.InvokeLLM({
       prompt: `You are an expert travel advisor for Egypt. Generate practical travel tips for a ${nat} tourist.
 
 CRITICAL: Write ENTIRELY in ${lang}. Do NOT use English unless the language IS English. 

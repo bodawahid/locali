@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import {
   Bot, Sparkles, DollarSign, ShieldCheck, ChevronRight,
   Map, Users, Eye, Star, ArrowRight, Search
@@ -114,8 +114,8 @@ export default function Home() {
     queryKey: ['liveInfo'],
     queryFn: async () => {
       const [rates, situation] = await Promise.all([
-        base44.entities.CurrencyRate.list('-created_date', 1),
-        base44.entities.LiveSituation.filter({ city: 'global' }, '-created_date', 1),
+        localApi.entities.CurrencyRate.list('-created_date', 1),
+        localApi.entities.LiveSituation.filter({ city: 'global' }, '-created_date', 1),
       ]);
       return {
         usd: rates?.[0]?.usd,

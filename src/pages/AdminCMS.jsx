@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useCallback } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useAuth } from '@/lib/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -429,9 +429,9 @@ function RecordModal({ entity, record, onSave, onClose }) {
     setError('');
     try {
       if (record?.id) {
-        await base44.entities[entity.name].update(record.id, form);
+        await localApi.entities[entity.name].update(record.id, form);
       } else {
-        await base44.entities[entity.name].create(form);
+        await localApi.entities[entity.name].create(form);
       }
       onSave();
     } catch (e) {
@@ -494,7 +494,7 @@ function EntityManager({ entity }) {
 
   const load = useCallback(async () => {
     setLoading(true);
-    const data = await base44.entities[entity.name].list('-updated_date', 200);
+    const data = await localApi.entities[entity.name].list('-updated_date', 200);
     setRecords(data);
     setLoading(false);
   }, [entity.name]);
@@ -504,7 +504,7 @@ function EntityManager({ entity }) {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000); };
 
   const handleDelete = async (id) => {
-    await base44.entities[entity.name].delete(id);
+    await localApi.entities[entity.name].delete(id);
     setDeleting(null);
     showToast('Record deleted');
     load();

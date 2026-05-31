@@ -4,7 +4,7 @@
  */
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { MapPin, Star, ShieldCheck, Zap, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/AuthContext';
@@ -82,14 +82,14 @@ export default function ElGounaServices() {
 
   const { data: services = [], isLoading } = useQuery({
     queryKey: ['services-el-gouna'],
-    queryFn: () => base44.entities.Service.filter({ city: 'el-gouna' }, '-created_date', 100),
+    queryFn: () => localApi.entities.Service.filter({ city: 'el-gouna' }, '-created_date', 100),
     staleTime: 60000,
   });
 
   const runAutoTag = async () => {
     setTagging(true);
     setTagResult(null);
-    const res = await base44.functions.invoke('tagElGounaServices', {});
+    const res = await localApi.functions.invoke('tagElGounaServices', {});
     setTagResult(res.data);
     setTagging(false);
     queryClient.invalidateQueries(['services-el-gouna']);

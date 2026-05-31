@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import { t } from '../lib/constants';
@@ -11,7 +11,7 @@ const STATUS_TEXT_COLOR = { green: 'text-emerald-600', yellow: 'text-amber-600',
 export default function CityLivePanel({ cityId, lang = 'en' }) {
   const { data, isLoading } = useQuery({
     queryKey: ['liveCity', cityId],
-    queryFn: () => base44.entities.LiveSituation.filter({ city: cityId }, '-updated_date', 1),
+    queryFn: () => localApi.entities.LiveSituation.filter({ city: cityId }, '-updated_date', 1),
     staleTime: 5 * 60 * 1000,
     enabled: !!cityId,
   });

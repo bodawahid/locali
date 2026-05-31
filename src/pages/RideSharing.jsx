@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useSEO } from '../lib/seo';
 import SafeNextStep from '../components/SafeNextStep';
 import { Car, Plus, MapPin, Calendar, Users, Phone, AlertTriangle, Shield, Star } from 'lucide-react';
@@ -48,14 +48,14 @@ export default function RideSharing() {
       const filter = { status: 'active' };
       if (fromFilter) filter.from_city = fromFilter;
       if (toFilter) filter.to_city = toFilter;
-      return base44.entities.RideShare.filter(filter, 'departure_date', 50);
+      return localApi.entities.RideShare.filter(filter, 'departure_date', 50);
     },
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    await base44.entities.RideShare.create({ ...form, status: 'active' });
+    await localApi.entities.RideShare.create({ ...form, status: 'active' });
     setSubmitting(false);
     setShowForm(false);
     setForm(EMPTY_FORM);

@@ -3,7 +3,7 @@
  * Used by Medical, Transport, Kids & Family, SIM & Internet pages.
  */
 import { useState } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { X, Loader2 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
 
@@ -24,9 +24,9 @@ export default function AdminServiceForm({ category, onSave, onClose, record }) 
     setSaving(true);
     const data = { ...form, avg_rating: parseFloat(form.avg_rating) || 0 };
     if (record?.id) {
-      await base44.entities.Service.update(record.id, data);
+      await localApi.entities.Service.update(record.id, data);
     } else {
-      await base44.entities.Service.create(data);
+      await localApi.entities.Service.create(data);
     }
     setSaving(false);
     onSave();

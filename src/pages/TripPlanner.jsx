@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
 import { MapPin, Calendar, DollarSign, Users, Sparkles, ArrowRight, Copy, Check, RefreshCw, Heart, Plane, Hotel, Utensils, Camera, Shield, AlertTriangle } from 'lucide-react';
 import { useSEO } from '../lib/seo';
@@ -123,7 +123,7 @@ End with:
 
 Keep it concise. Use real April 2026 prices. 1 EUR ≈ 54 EGP.`;
 
-    const result = await base44.integrations.Core.InvokeLLM({ prompt });
+    const result = await localApi.integrations.Core.InvokeLLM({ prompt });
     const plan = {
       text: result,
       city: cityLabel,
@@ -137,9 +137,9 @@ Keep it concise. Use real April 2026 prices. 1 EUR ≈ 54 EGP.`;
 
     // Save to DB if logged in
     try {
-      const me = await base44.auth.me();
+      const me = await localApi.auth.me();
       if (me?.email) {
-        await base44.entities.SavedItinerary.create({
+        await localApi.entities.SavedItinerary.create({
           city,
           city_label: cityLabel,
           days,

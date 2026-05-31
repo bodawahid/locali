@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import {
   Search, MapPin, Phone, Globe, Star, Clock, Loader2,
   X, ChevronRight, ExternalLink, MessageCircle
@@ -182,7 +182,7 @@ export default function PlaceSearch() {
     debounceRef.current = setTimeout(async () => {
       setSearching(true);
       try {
-        const res = await base44.functions.invoke('googlePlaces', { action: 'search', query: val });
+        const res = await localApi.functions.invoke('googlePlaces', { action: 'search', query: val });
         setSuggestions(res.data?.results || []);
       } catch (err) {
         console.error('Search failed:', err);
@@ -201,7 +201,7 @@ export default function PlaceSearch() {
     setSelectedPlace(null);
 
     try {
-      const res = await base44.functions.invoke('googlePlaces', { action: 'details', placeId: suggestion.place_id });
+      const res = await localApi.functions.invoke('googlePlaces', { action: 'details', placeId: suggestion.place_id });
       setSelectedPlace(res.data?.place || null);
     } catch (err) {
       console.error('Details failed:', err);

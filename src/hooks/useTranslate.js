@@ -10,7 +10,7 @@
  */
 
 import { useCallback, useRef } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 // Session-level cache: key = `${lang}::${text}`, value = translated string
 const CACHE = {};
@@ -36,7 +36,7 @@ function flushBatch(lang) {
 
   const cacheKey = (text) => `${lang}::${text}`;
 
-  base44.integrations.Core.InvokeLLM({
+  localApi.integrations.Core.InvokeLLM({
     prompt: `You are a professional tourism app translator. Translate the following UI texts to "${lang}" language.
 Context: This is a travel safety and pricing app for Egypt tourists. Use natural, friendly tone.
 Tourism context: "charge" = payment fee, "ride" = taxi/transport, "guide" = tour guide, "verified" = officially checked.

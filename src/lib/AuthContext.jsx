@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Navigate, Outlet } from 'react-router-dom';
 
 const AuthContext = createContext(null);
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       // تعديل الإرسال ليتوافق مع الـ PHP والـ Form (بنبعت الحقل كـ username وكـ email لتأمين الطرفين)
-      const result = await base44.auth.login(usernameOrEmail, password);
+      const result = await localApi.auth.login(usernameOrEmail, password);
       
       // FALLBACK فوري: لو الـ PHP رجع داتا ناقصة بسبب كاش قديم، ثبت الأدمن بيدك هنا
       if ((usernameOrEmail === 'admin' && password === 'admin') || (result?.token)) {
@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     setIsLoadingAuth(true);
     setError(null);
     try {
-      const result = await base44.auth.register(name, email, password, role);
+      const result = await localApi.auth.register(name, email, password, role);
       if (result?.token && result?.user) {
         localStorage.setItem(TOKEN_KEY, result.token);
         localStorage.setItem(USER_KEY, JSON.stringify(result.user));

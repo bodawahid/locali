@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import {
   ShieldCheck, AlertTriangle, XCircle, CheckCircle2, Phone,
   DollarSign, MapPin, Clock, FileText, Globe, RefreshCw,
@@ -310,7 +310,7 @@ function PopulateDataTab() {
       }
     };
 
-    const res = await base44.integrations.Core.InvokeLLM({
+    const res = await localApi.integrations.Core.InvokeLLM({
       prompt: buildPopulatePrompt(city, cityLabel, category),
       add_context_from_internet: true,
       response_json_schema: schema,
@@ -358,7 +358,7 @@ function PopulateDataTab() {
           tags: item.tags || [],
         };
       }
-      try { await base44.entities[entityName].create(record); saved++; }
+      try { await localApi.entities[entityName].create(record); saved++; }
       catch { addLog(`❌ Failed: ${record.name || record.full_name}`); }
     }
     setSavedTotal(p => p + saved);
@@ -482,23 +482,23 @@ export default function AdminVerification() {
   // Fetch all entity data
   const { data: services = [], isLoading: loadingServices } = useQuery({
     queryKey: ['verify-services', refreshKey],
-    queryFn: () => base44.entities.Service.list('-updated_date', 200),
+    queryFn: () => localApi.entities.Service.list('-updated_date', 200),
   });
   const { data: drivers = [], isLoading: loadingDrivers } = useQuery({
     queryKey: ['verify-drivers', refreshKey],
-    queryFn: () => base44.entities.VerifiedDriver.list('-updated_date', 100),
+    queryFn: () => localApi.entities.VerifiedDriver.list('-updated_date', 100),
   });
   const { data: apartments = [], isLoading: loadingApts } = useQuery({
     queryKey: ['verify-apartments', refreshKey],
-    queryFn: () => base44.entities.Apartment.list('-updated_date', 100),
+    queryFn: () => localApi.entities.Apartment.list('-updated_date', 100),
   });
   const { data: priceGuides = [], isLoading: loadingPrices } = useQuery({
     queryKey: ['verify-prices', refreshKey],
-    queryFn: () => base44.entities.PriceGuide.list('-updated_date', 200),
+    queryFn: () => localApi.entities.PriceGuide.list('-updated_date', 200),
   });
   const { data: scamReports = [], isLoading: loadingScams } = useQuery({
     queryKey: ['verify-scams', refreshKey],
-    queryFn: () => base44.entities.ScamReport.list('-updated_date', 100),
+    queryFn: () => localApi.entities.ScamReport.list('-updated_date', 100),
   });
 
   const isLoading = loadingServices || loadingDrivers || loadingApts || loadingPrices || loadingScams;

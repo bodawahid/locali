@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { Plus, Edit2, Check, X, AlertTriangle, TrendingUp, Bot, Loader2, RefreshCw } from 'lucide-react';
 
 const CATEGORIES = [
@@ -178,7 +178,7 @@ function PriceRow({ entry, onEdit, onDelete, onApproveSuggestion }) {
               className="flex items-center gap-1 text-[10px] font-bold bg-violet-600 text-white px-2 py-1 rounded-lg hover:bg-violet-700">
               <Check className="w-2.5 h-2.5" /> Apply
             </button>
-            <button onClick={() => base44.entities.PriceEntry.update(entry.id, { pending_suggestion: null })}
+            <button onClick={() => localApi.entities.PriceEntry.update(entry.id, { pending_suggestion: null })}
               className="flex items-center gap-1 text-[10px] font-bold bg-gray-200 text-gray-600 px-2 py-1 rounded-lg hover:bg-gray-300">
               <X className="w-2.5 h-2.5" /> Dismiss
             </button>
@@ -200,7 +200,7 @@ export default function AdminPriceManager() {
 
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['priceEntries'],
-    queryFn: () => base44.entities.PriceEntry.list('-updated_date', 200),
+    queryFn: () => localApi.entities.PriceEntry.list('-updated_date', 200),
   });
 
   const refresh = () => qc.invalidateQueries(['priceEntries']);
@@ -208,9 +208,9 @@ export default function AdminPriceManager() {
   const handleSave = async (form) => {
     setSaving(true);
     if (editEntry) {
-      await base44.entities.PriceEntry.update(editEntry.id, form);
+      await localApi.entities.PriceEntry.update(editEntry.id, form);
     } else {
-      await base44.entities.PriceEntry.create(form);
+      await localApi.entities.PriceEntry.create(form);
     }
     setSaving(false);
     setShowForm(false);
@@ -219,7 +219,7 @@ export default function AdminPriceManager() {
   };
 
   const handleDelete = async (id) => {
-    await base44.entities.PriceEntry.delete(id);
+    await localApi.entities.PriceEntry.delete(id);
     refresh();
   };
 
@@ -233,7 +233,7 @@ export default function AdminPriceManager() {
     // Parse suggestion like "120-180 EGP" and apply
     const match = entry.pending_suggestion?.match(/(\d+)\s*[-–]\s*(\d+)/);
     if (match) {
-      await base44.entities.PriceEntry.update(entry.id, {
+      await localApi.entities.PriceEntry.update(entry.id, {
         min_price: +match[1],
         max_price: +match[2],
         pending_suggestion: null,
@@ -250,14 +250,14 @@ export default function AdminPriceManager() {
     // Pick first 5 entries without recent verification
     const targets = entries.slice(0, 5);
     for (const entry of targets) {
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await localApi.integrations.Core.InvokeLLM({
         prompt: `You are a travel price researcher for Egypt. Based on current 2024-2026 data, suggest an accurate price range for: "${entry.title}" in ${entry.city}, category: ${entry.category}.
 Current range: ${entry.min_price}–${entry.max_price} ${entry.currency}.
 Reply with ONLY a suggested range like "100-200 EGP" or "same" if current is accurate. No explanation.`,
         add_context_from_internet: false,
       });
       if (result && result !== 'same' && result.toLowerCase() !== 'same') {
-        await base44.entities.PriceEntry.update(entry.id, { pending_suggestion: result.trim() });
+        await localApi.entities.PriceEntry.update(entry.id, { pending_suggestion: result.trim() });
       }
     }
     setAiLoading(false);

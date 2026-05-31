@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 // Fallback rates (updated April 2026)
 export const FALLBACK_RATES = {
@@ -16,7 +16,7 @@ export function useLiveRates() {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['live-rates-db'],
     queryFn: async () => {
-      const records = await base44.entities.CurrencyRate.list('-created_date', 1);
+      const records = await localApi.entities.CurrencyRate.list('-created_date', 1);
       return records?.[0] || null;
     },
     staleTime: 1000 * 60 * 30, // re-read DB every 30 min

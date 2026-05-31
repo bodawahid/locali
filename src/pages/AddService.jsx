@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { Upload, Trash2, Loader2, CheckCircle2, ArrowLeft, Phone, MessageCircle } from 'lucide-react';
 
@@ -52,7 +52,7 @@ export default function AddService() {
     setUploadingPhoto(true);
     for (const file of files) {
       try {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const { file_url } = await localApi.integrations.Core.UploadFile({ file });
         setPhotos(p => [...p, file_url]);
       } catch {}
     }
@@ -64,7 +64,7 @@ export default function AddService() {
     if (!validate()) return;
     setStatus('loading');
     try {
-      const record = await base44.entities.Service.create({
+      const record = await localApi.entities.Service.create({
         name: form.businessName.trim(),
         category: CATEGORY_MAP[form.serviceType] || 'other',
         phone: form.phone.trim(),

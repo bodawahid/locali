@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Star, Clock, MessageCircle, MapPin, Instagram, Globe } from 'lucide-react';
-import { base44 } from '@/api/base44Client';
+import { localApi } from '@/api/localApi';
 
 const CITY_STYLES = {
   hurghada: { tag: 'bg-orange-100 text-orange-700', border: 'border-orange-200' },
@@ -175,7 +175,7 @@ function StableCard({ s, style }) {
   useEffect(() => {
     if (!s.imageQuery) return;
     setLoading(true);
-    base44.functions.invoke('fetchFreeImages', { placeName: s.imageQuery, maxImages: 3 })
+    localApi.functions.invoke('fetchFreeImages', { placeName: s.imageQuery, maxImages: 3 })
       .then(res => {
         const imgs = res?.data?.images || [];
         if (imgs.length > 0) setPhoto(imgs[0].url);
