@@ -1,6 +1,6 @@
 // @ts-nocheck
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { localApi } from '@/api/localApi';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -27,19 +27,46 @@ const CATEGORY_ICONS = { hotel: '🏨', apartment: '🏠', experience: '🎯', s
 export default function LocaliAdminPanel() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   
   // تتبع الموديول النشط حالياً في الجنب اليمين
   const [activeMenu, setActiveMenu] = useState('dashboard'); 
   const [tab, setTab] = useState('pending');
   const [acting, setActing] = useState(null);
+  const loadMoreRef = useRef(null);
 
   // جلب البيانات الأساسية للوحة القيادة
-  const { data: places = [], isLoading, refetch } = useQuery({
-    queryKey: ['admin-places'],
-    queryFn: () => localApi.entities.Place.list('-created_date', 200),
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['admin-places-infinite'],
+    queryFn: ({ pageParam = 1 }) => localApi.entities.Place.list('-created_date', 24, pageParam),
+    getNextPageParam: (lastPage, allPages) => (
+      Array.isArray(lastPage) && lastPage.length === 24 ? allPages.length + 1 : undefined
+    ),
     enabled: user?.role === 'admin',
     staleTime: 30000,
   });
+  const places = useMemo(() => data?.pages?.flat() ?? [], [data]);
+
+  useEffect(() => {
+    if (activeMenu !== 'dashboard') return;
+    const node = loadMoreRef.current;
+    if (!node || !hasNextPage || isFetchingNextPage || isLoading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) fetchNextPage();
+      },
+      { rootMargin: '0px 0px 280px 0px' }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [activeMenu, hasNextPage, isFetchingNextPage, fetchNextPage, isLoading]);
 
   if (!user || user.role !== 'admin') {
     return (
@@ -62,14 +89,14 @@ export default function LocaliAdminPanel() {
   const updateStatus = async (id, status) => {
     setActing(id);
     await localApi.entities.Place.update(id, { status });
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
     setActing(null);
   };
 
   const toggleFeatured = async (place) => {
     setActing(place.id);
     await localApi.entities.Place.update(place.id, { is_featured: !place.is_featured });
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
     setActing(null);
   };
 
@@ -77,7 +104,7 @@ export default function LocaliAdminPanel() {
     if (!confirm('Delete this listing permanently?')) return;
     setActing(id);
     await localApi.entities.Place.delete(id);
-    refetch();
+    queryClient.invalidateQueries({ queryKey: ['admin-places-infinite'] });
     setActing(null);
   };
 
@@ -284,6 +311,15 @@ export default function LocaliAdminPanel() {
                       </div>
                     );
                   })}
+                  {isFetchingNextPage && (
+                    <div className="flex justify-center py-4">
+                      <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />
+                    </div>
+                  )}
+                  {!isFetchingNextPage && !hasNextPage && currentPlaces.length > 0 && (
+                    <p className="text-center text-xs font-medium text-gray-400 py-2">No more records</p>
+                  )}
+                  <div ref={loadMoreRef} className="h-1" />
                 </div>
               )}
             </>

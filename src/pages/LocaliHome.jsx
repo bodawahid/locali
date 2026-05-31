@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { localApi } from '@/api/localApi';
 import { Link } from 'react-router-dom';
-import { Grid3X3, LayoutList, Plus, User, Shield } from 'lucide-react';
+import { Grid3X3, LayoutList, Plus, Shield, Loader2 } from 'lucide-react';
 import PlaceCard from '../components/locali/PlaceCard.jsx';
 import SearchFilters from '../components/locali/SearchFilters';
 import PlaceForm from '../components/locali/PlaceForm';
@@ -10,15 +10,43 @@ import { useAuth } from '@/lib/AuthContext';
 
 export default function LocaliHome() {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [filters, setFilters] = useState({ search: '', city: '', category: '', minPrice: '', maxPrice: '' });
   const [showForm, setShowForm] = useState(false);
   const [gridView, setGridView] = useState(true);
+  const loadMoreRef = useRef(null);
 
-  const { data: places = [], refetch, isLoading } = useQuery({
-    queryKey: ['places-approved'],
-    queryFn: () => localApi.entities.Place.filter({ status: 'approved' }, '-created_date', 100),
+  const {
+    data,
+    isLoading,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['places-approved-infinite'],
+    queryFn: ({ pageParam = 1 }) =>
+      localApi.entities.Place.filter({ status: 'approved' }, '-created_date', 24, pageParam),
+    getNextPageParam: (lastPage, allPages) => (
+      Array.isArray(lastPage) && lastPage.length === 24 ? allPages.length + 1 : undefined
+    ),
     staleTime: 60000,
   });
+  const places = useMemo(() => data?.pages?.flat() ?? [], [data]);
+
+  useEffect(() => {
+    const node = loadMoreRef.current;
+    if (!node || !hasNextPage || isFetchingNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) fetchNextPage();
+      },
+      { rootMargin: '0px 0px 300px 0px' }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const filtered = useMemo(() => {
     return places.filter(p => {
@@ -173,6 +201,17 @@ export default function LocaliHome() {
                 </div>
               </div>
             )}
+
+            {isFetchingNextPage && (
+              <div className="flex justify-center items-center gap-2 py-6">
+                <Loader2 className="w-4 h-4 animate-spin text-rose-500" />
+                <span className="text-sm text-gray-500">Loading more places...</span>
+              </div>
+            )}
+            {!isFetchingNextPage && !hasNextPage && places.length > 0 && (
+              <p className="text-center text-xs text-gray-400 py-6">No more places to load</p>
+            )}
+            <div ref={loadMoreRef} className="h-1" />
           </>
         )}
       </div>
@@ -193,7 +232,10 @@ export default function LocaliHome() {
         <PlaceForm
           hostEmail={user?.email}
           hostName={user?.full_name}
-          onSave={() => { setShowForm(false); refetch(); }}
+          onSave={() => {
+            setShowForm(false);
+            queryClient.invalidateQueries({ queryKey: ['places-approved-infinite'] });
+          }}
           onClose={() => setShowForm(false)}
         />
       )}

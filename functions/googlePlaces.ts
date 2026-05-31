@@ -2,11 +2,14 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.23';
 
 const API_KEY = Deno.env.get('GOOGLE_PLACES_API_KEY');
 const BASE = 'https://maps.googleapis.com/maps/api/place';
+const PAGE_SIZE_MAX = 20;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { action, query, placeId } = await req.json();
+    const { action, query, placeId, page: rawPage, limit: rawLimit } = await req.json();
 
     if (!API_KEY) {
       return Response.json({ error: 'GOOGLE_PLACES_API_KEY not configured' }, { status: 500 });
@@ -16,15 +19,48 @@ Deno.serve(async (req) => {
     if (action === 'search') {
       if (!query) return Response.json({ results: [] });
 
-      const url = `${BASE}/textsearch/json?query=${encodeURIComponent(query + ' Egypt')}&key=${API_KEY}`;
-      const res = await fetch(url);
-      const data = await res.json();
+      const page = Math.max(1, Number.parseInt(String(rawPage ?? 1), 10) || 1);
+      const limit = Math.min(
+        PAGE_SIZE_MAX,
+        Math.max(1, Number.parseInt(String(rawLimit ?? 8), 10) || 8),
+      );
 
-      if (data.status !== 'OK' && data.status !== 'ZERO_RESULTS') {
-        return Response.json({ error: data.status, results: [] }, { status: 400 });
+      let currentData: any = null;
+      let nextPageToken: string | undefined;
+
+      for (let currentPage = 1; currentPage <= page; currentPage += 1) {
+        const useToken = currentPage > 1;
+        const requestUrl = useToken
+          ? `${BASE}/textsearch/json?pagetoken=${encodeURIComponent(nextPageToken || '')}&key=${API_KEY}`
+          : `${BASE}/textsearch/json?query=${encodeURIComponent(query + ' Egypt')}&key=${API_KEY}`;
+
+        let attempts = useToken ? 4 : 1;
+        while (attempts > 0) {
+          const res = await fetch(requestUrl);
+          currentData = await res.json();
+
+          if (!useToken || currentData.status !== 'INVALID_REQUEST') break;
+          attempts -= 1;
+          if (attempts > 0) await sleep(2000);
+        }
+
+        if (!currentData || (currentData.status !== 'OK' && currentData.status !== 'ZERO_RESULTS')) {
+          return Response.json({ error: currentData?.status || 'UNKNOWN_ERROR', results: [] }, { status: 400 });
+        }
+
+        nextPageToken = currentData.next_page_token;
+        if (currentPage < page && !nextPageToken) {
+          return Response.json({
+            results: [],
+            page,
+            limit,
+            hasMore: false,
+            nextPage: null,
+          });
+        }
       }
 
-      const results = (data.results || []).slice(0, 8).map(p => ({
+      const results = (currentData?.results || []).slice(0, limit).map(p => ({
         place_id: p.place_id,
         name: p.name,
         address: p.formatted_address,
@@ -35,7 +71,14 @@ Deno.serve(async (req) => {
         lng: p.geometry?.location?.lng,
       }));
 
-      return Response.json({ results });
+      const hasMore = Boolean(currentData?.next_page_token);
+      return Response.json({
+        results,
+        page,
+        limit,
+        hasMore,
+        nextPage: hasMore ? page + 1 : null,
+      });
     }
 
     // ── 2. Place Details ────────────────────────────────────────────────────

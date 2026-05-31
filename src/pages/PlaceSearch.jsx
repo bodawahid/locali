@@ -163,11 +163,61 @@ export default function PlaceSearch() {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [searching, setSearching] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMoreSuggestions, setHasMoreSuggestions] = useState(false);
+  const [suggestionPage, setSuggestionPage] = useState(1);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const debounceRef = useRef(null);
   const inputRef = useRef(null);
+  const observerRef = useRef(null);
+  const sentinelRef = useRef(null);
+  const latestRequestRef = useRef(0);
+
+  const fetchSuggestionsPage = async (searchValue, page, append = false) => {
+    if (!searchValue.trim()) return;
+    const requestId = Date.now();
+    latestRequestRef.current = requestId;
+
+    if (append) setLoadingMore(true);
+    else setSearching(true);
+
+    try {
+      const res = await localApi.functions.invoke('googlePlaces', {
+        action: 'search',
+        query: searchValue,
+        page,
+        limit: 8,
+      });
+
+      if (latestRequestRef.current !== requestId) return;
+
+      const incoming = Array.isArray(res.data?.results) ? res.data.results : [];
+      const hasMore = typeof res.data?.hasMore === 'boolean'
+        ? res.data.hasMore
+        : incoming.length >= 8;
+
+      setSuggestions((prev) => {
+        if (!append) return incoming;
+        const existingIds = new Set(prev.map((item) => item.place_id));
+        const merged = [...prev];
+        incoming.forEach((item) => {
+          if (!existingIds.has(item.place_id)) merged.push(item);
+        });
+        return merged;
+      });
+      setHasMoreSuggestions(hasMore);
+      setSuggestionPage(page);
+    } catch (err) {
+      if (!append) setSuggestions([]);
+      setHasMoreSuggestions(false);
+      console.error('Search failed:', err);
+    } finally {
+      if (append) setLoadingMore(false);
+      else setSearching(false);
+    }
+  };
 
   const handleSearch = (val) => {
     setQuery(val);
@@ -176,20 +226,13 @@ export default function PlaceSearch() {
 
     if (val.trim().length < 2) {
       setSuggestions([]);
+      setHasMoreSuggestions(false);
+      setSuggestionPage(1);
       return;
     }
 
     debounceRef.current = setTimeout(async () => {
-      setSearching(true);
-      try {
-        const res = await localApi.functions.invoke('googlePlaces', { action: 'search', query: val });
-        setSuggestions(res.data?.results || []);
-      } catch (err) {
-        console.error('Search failed:', err);
-        setSuggestions([]);
-      } finally {
-        setSearching(false);
-      }
+      fetchSuggestionsPage(val, 1, false);
     }, 400);
   };
 
@@ -213,12 +256,31 @@ export default function PlaceSearch() {
   const handleClear = () => {
     setQuery('');
     setSuggestions([]);
+    setHasMoreSuggestions(false);
+    setSuggestionPage(1);
     setSelectedPlace(null);
     setShowSuggestions(false);
     inputRef.current?.focus();
   };
 
   useEffect(() => () => clearTimeout(debounceRef.current), []);
+
+  useEffect(() => {
+    if (observerRef.current) observerRef.current.disconnect();
+    if (!showSuggestions || !hasMoreSuggestions || searching || loadingMore || query.trim().length < 2) return;
+    if (!sentinelRef.current) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (!entries[0]?.isIntersecting) return;
+        fetchSuggestionsPage(query, suggestionPage + 1, true);
+      },
+      { root: null, rootMargin: '0px 0px 200px 0px', threshold: 0.1 }
+    );
+    observerRef.current.observe(sentinelRef.current);
+
+    return () => observerRef.current?.disconnect();
+  }, [showSuggestions, hasMoreSuggestions, searching, loadingMore, query, suggestionPage]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white px-4 py-10">
@@ -275,6 +337,20 @@ export default function PlaceSearch() {
                   <ChevronRight className="w-4 h-4 text-gray-300 shrink-0" />
                 </button>
               ))}
+              {(loadingMore || hasMoreSuggestions || !hasMoreSuggestions) && (
+                <div ref={sentinelRef} className="py-3 border-t border-gray-50">
+                  {loadingMore ? (
+                    <div className="flex items-center justify-center gap-2 text-xs text-gray-500">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      Loading more places...
+                    </div>
+                  ) : hasMoreSuggestions ? (
+                    <p className="text-center text-[11px] text-gray-400">Scroll for more results</p>
+                  ) : (
+                    <p className="text-center text-[11px] text-gray-400">No more places found</p>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
