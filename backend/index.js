@@ -5,6 +5,8 @@ const authRoutes = require('./routes/auth');
 const functionsRoutes = require('./routes/functions');
 const entitiesRoutes = require('./routes/entities');
 const adminRoutes = require('./routes/admin');
+const lokiRoutes = require('./routes/loki');
+const scrapersRoutes = require('./routes/scrapers');
 
 const app = express();
 app.use(cors());
@@ -15,12 +17,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/functions', functionsRoutes);
 app.use('/api', entitiesRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/loki', lokiRoutes);
+app.use('/api/scrapers', scrapersRoutes);
 
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok', backend: 'locali-backend' });
+    res.json({ status: 'ok', backend: 'locali-backend' });
 });
 
 const PORT = parseInt(process.env.PORT || '5000', 10);
 app.listen(PORT, () => {
-  console.log(`Locali backend listening on http://localhost:${PORT}`);
+    console.log(`Locali backend listening on http://localhost:${PORT}`);
 });

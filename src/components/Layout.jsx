@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 import Footer from './Footer';
-import FloatingAIChat from './FloatingAIChat';
 import TopBar from './TopBar';
 import BottomNav from './BottomNav';
+import PageTransition from './PageTransition';
 
 import useLanguage from '../hooks/useLanguage';
 import useTranslate, { isRTL } from '../hooks/useTranslate';
+
+const LokiFloatingWidget = lazy(() => import('./loki/LokiFloatingWidget'));
+
+function ChatLoader() {
+  return null;
+}
 
 export default function Layout() {
   const { lang, changeLang } = useLanguage();
@@ -15,12 +21,18 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-white" dir={isRTL(lang) ? 'rtl' : 'ltr'}>
-      <TopBar lang={lang} onLangChange={changeLang} />
+      <TopBar lang={lang} onLangChange={changeLang} onOpenChat={() => setOpenChat(true)} />
       <main className="pb-20 md:pb-0">
-        <Outlet context={{ lang, changeLang, tx, openAIChat: () => setOpenChat(true) }} />
+        <PageTransition>
+          <Outlet context={{ lang, changeLang, tx, openAIChat: () => setOpenChat(true) }} />
+        </PageTransition>
       </main>
 
-      <FloatingAIChat externalOpen={openChat} onExternalOpenHandled={() => setOpenChat(false)} />
+      {/* LOKI AI Floating Widget — Available on all pages */}
+      <Suspense fallback={<ChatLoader />}>
+        <LokiFloatingWidget externalOpen={openChat} onExternalOpenHandled={() => setOpenChat(false)} />
+      </Suspense>
+      
       <Footer lang={lang} />
       <BottomNav />
     </div>

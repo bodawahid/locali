@@ -102,6 +102,8 @@ import AdminPriceManager from './pages/AdminPriceManager';
 import AdminPlaceImageUpdater from './pages/AdminPlaceImageUpdater';
 import AdminAutoImages from './pages/AdminAutoImages';
 
+import LokiAgent from './components/lokiAgent';
+
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
 
@@ -128,6 +130,17 @@ const AuthenticatedApp = () => {
       {/* ========================================================================= */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        
+        {/* ========================================================================= */}
+        {/* صفحة مخصصة لاختبار الذكاء الاصطناعي (LOKI) - ادخل على اللينك /loki-test */}
+        {/* ========================================================================= */}
+        <Route path="/loki-test" element={
+          <div className="flex flex-col items-center justify-center py-10 w-full min-h-[80vh]">
+            <LokiAgent />
+          </div>
+        } />
+        {/* ========================================================================= */}
+
         <Route path="/city/:cityId" element={<CityPage />} />
         <Route path="/city/:cityId/prices" element={<CityPrices />} />
         <Route path="/city/:cityId/scams" element={<CityScams />} />

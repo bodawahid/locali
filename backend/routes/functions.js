@@ -67,14 +67,101 @@ router.post('/update-currency-rates', async (req, res) => {
 });
 
 router.post('/google-places', async (req, res) => {
-  const { action } = req.body || {};
-  if (action === 'search') {
-    return res.json({ suggestions: [] });
+  const API_KEY = process.env.GOOGLE_PLACES_API_KEY || process.env.VITE_GOOGLE_MAPS_API_KEY;
+  const { action, query, placeId } = req.body || {};
+
+  if (!API_KEY) {
+    return res.status(503).json({ error: 'GOOGLE_PLACES_API_KEY not configured', results: [] });
   }
-  if (action === 'details') {
-    return res.json({ place: null });
+
+  const BASE = 'https://maps.googleapis.com/maps/api/place';
+
+  try {
+    if (action === 'scam-hotspots') {
+      const city = query || 'Hurghada';
+      const searches = [
+        `${city} taxi scam tourist Egypt`,
+        `${city} tourist trap Egypt`,
+        `${city} bazaar overcharge Egypt`,
+      ];
+      const all = [];
+      for (const q of searches) {
+        const url = `${BASE}/textsearch/json?query=${encodeURIComponent(q)}&key=${API_KEY}`;
+        const r = await fetch(url);
+        const data = await r.json();
+        (data.results || []).slice(0, 3).forEach((p) => {
+          all.push({
+            place_id: p.place_id,
+            name: p.name,
+            address: p.formatted_address,
+            lat: p.geometry?.location?.lat,
+            lng: p.geometry?.location?.lng,
+            rating: p.rating,
+            source: 'google_places',
+          });
+        });
+      }
+      return res.json({ results: all });
+    }
+
+    if (action === 'search') {
+      if (!query) return res.json({ results: [] });
+      const url = `${BASE}/textsearch/json?query=${encodeURIComponent(query + ' Egypt')}&key=${API_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      const results = (data.results || []).slice(0, 8).map((p) => ({
+        place_id: p.place_id,
+        name: p.name,
+        address: p.formatted_address,
+        lat: p.geometry?.location?.lat,
+        lng: p.geometry?.location?.lng,
+        rating: p.rating,
+      }));
+      return res.json({ results });
+    }
+
+    if (action === 'geocode') {
+      if (!query) return res.json({ results: [] });
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(query)}&key=${API_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      const results = (data.results || []).map((g) => ({
+        address: g.formatted_address,
+        lat: g.geometry?.location?.lat,
+        lng: g.geometry?.location?.lng,
+      }));
+      return res.json({ results });
+    }
+
+    if (action === 'details' && placeId) {
+      const fields = 'name,formatted_address,rating,user_ratings_total,geometry,url,reviews';
+      const url = `${BASE}/details/json?place_id=${placeId}&fields=${fields}&key=${API_KEY}`;
+      const r = await fetch(url);
+      const data = await r.json();
+      if (data.status !== 'OK') return res.json({ error: data.status }, { status: 400 });
+      const p = data.result;
+      const scamReviews = (p.reviews || [])
+        .filter((rev) => /scam|overcharge|rip|tourist trap|expensive|avoid/i.test(rev.text || ''))
+        .slice(0, 3)
+        .map((rev) => ({ text: rev.text, rating: rev.rating, author: rev.author_name }));
+      return res.json({
+        place: {
+          name: p.name,
+          address: p.formatted_address,
+          lat: p.geometry?.location?.lat,
+          lng: p.geometry?.location?.lng,
+          rating: p.rating,
+          google_maps_url: p.url,
+          scam_reviews: scamReviews,
+        },
+      });
+    }
+
+    return res.json({ message: 'Use action: search | geocode | details | scam-hotspots' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Google Places request failed' });
   }
-  res.json({ message: 'Local googlePlaces stub running', action });
 });
 
 router.post('/fetch-free-images', async (req, res) => {
